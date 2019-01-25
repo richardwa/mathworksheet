@@ -1,5 +1,6 @@
 # mathworksheet
 Math worksheet generator
+https://richardwa.github.io/mathworksheet/
 
 A simple math worksheet generator.  Written without any frameworks or build tools for easy editing, customizing and serving.
 
