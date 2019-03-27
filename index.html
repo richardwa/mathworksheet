@@ -67,7 +67,7 @@
       return createQuestion(op, ...rest);
     } else {
       const expr = rest.map((size, i) => field(terms[i], size)).join(` ${op} `);
-      return `<span style='width: ${total}ch' > ${expr} = </span>`;
+      return `<span style='width: ${total}ch' title='${solution}'> ${expr} = </span>`;
     }
   }
 
