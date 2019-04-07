@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Math Worksheet</title>
+
+  <script src='render.js'></script>
+  <link rel='shortcut icon' type='image/x-icon' href='favicon.png'>
+  <style>
+    body {
+      font-size: 35pt;
+      font-family: monospace;
+    }
+
+    span {
+      padding: 1ch 0;
+      display: inline-block;
+    }
+
+    label {
+      display: inline-block;
+      text-align: right;
+    }
+
+    .page {
+      width: 15in;
+    }
+  </style>
+</head>
+
+<body>
+</body>
+
+</html>
+<script>
+  if (!document.location.search) {
+    const defaultSettings = {
+      operations: ['+', '-'],
+      termLengths: [3, 2]
+    };
+    document.location = `${document.location}?${JSON.stringify(defaultSettings)}`;
+  }
+
+  function rand(size) {
+    const min = Math.pow(10, size - 1);
+    const max = Math.pow(10, size);
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  function pickOne(...op) {
+    return op[Math.floor(Math.random() * op.length)];
+  }
+
+  function field(a, size) {
+    return `<label style='width: ${size}ch'>${a}</label>`;
+  }
+
+  function createQuestion(op, ...rest) {
+    const total = rest.reduce((a, v, i) => a + v, 0) + 3 * (rest.length - 1) + 16;
+    const terms = rest.map(size => rand(size));
+    const solution = eval(terms.join(op));
+    if (solution <= 0) {
+      //no negative answers, choose other random terms
+      return createQuestion(op, ...rest);
+    } else {
+      const expr = rest.map((size, i) => field(terms[i], size)).join(` ${op} `);
+      return `<span style='width: ${total}ch' onClick=${jx.ref(() => alert())}> ${expr} = </span>`;
+    }
+  }
+
+  function render(settings) {
+    return [
+      '<div class=page>',
+      createQuestion(
+        pickOne(...settings.operations),
+        ...settings.termLengths),
+      '</div>'
+    ];
+  }
+
+  const [settings] = [document.location.search.substring(1)]
+    .map(decodeURIComponent)
+    .map(JSON.parse);
+
+  jx.render(render, settings);
+</script>
