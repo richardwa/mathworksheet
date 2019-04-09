@@ -47,21 +47,26 @@
     return `<label style='width: ${size}ch'>${a.toLocaleString()}</label>`;
   }
 
-  function question(op, ...rest) {
+  function listNumber(i) {
+    return `<i style='color:gray'>${(i + 1).toString().padStart(2, '0')})</i>`;
+  }
+
+  function question(num, op, ...rest) {
     const total = rest.reduce((a, v, i) => a + v, 0) + 3 * (rest.length - 1) + 16;
     const terms = rest.map(size => jx.rand(size));
     const solution = eval(terms.join(op));
     if (solution <= 0) {
       //no negative answers, choose other random terms
-      return question(op, ...rest);
+      return question(num, op, ...rest);
     } else {
       const expr = rest.map((size, i) => field(terms[i], size)).join(` ${op} `);
-      return `<span style='width: ${total}ch'> ${expr} <a href='javascript:alert(${solution.toLocaleString()})'> = </a></span>`;
+      return [
+        `<span style='width: ${total}ch'>`,
+        `${listNumber(num)} ${expr} `,
+        `<a href='javascript:alert(${solution.toLocaleString()})'> = </a>`,
+        '</span>'
+      ].join('');
     }
-  }
-
-  function listNumber(i) {
-    return `<i style='color:gray'>${(i + 1).toString().padStart(2, '0')})</i>`;
   }
 
   function render(settings) {
@@ -72,7 +77,7 @@
       ...Array.from({
           length: 26
         },
-        (x, i) => `${listNumber(i)}&nbsp;${question(op, ...settings.termLengths)}`),
+        (x, i) => `${question(i, op, ...settings.termLengths)}`),
       '</div>'
     ].join('');
   }
