@@ -10,7 +10,9 @@
   <link rel="stylesheet" type="text/css" href="main.css">
   <script src='render.js'></script>
   <style>
-
+    .correct {
+      border: 1px solid green;
+    }
   </style>
 </head>
 
@@ -20,39 +22,46 @@
 </html>
 <script>
   if (!jx.getURLState()) {
-    const defaultSettings = {
+    const state = {
       operations: ['+', '-'],
-      termLengths: [3, 2]
+      terms: [3, 2],
+      answer: '126'
     };
-    jx.setURLState(defaultSettings);
+    jx.setURLState(state);
   }
 
   function field(a, size) {
     return `<label style='width: ${size}ch'>${a}</label>`;
   }
 
-  function createQuestion(op, ...rest) {
-    const total = rest.reduce((a, v, i) => a + v, 0) + 3 * (rest.length - 1) + 16;
-    const terms = rest.map(size => jx.rand(size));
-    const solution = eval(terms.join(op));
+  function createQuestion(state) {
+    const {
+      operations,
+      terms,
+      answer
+    } = state;
+    const expr = terms.map((t, i) => `${operations[i]} ${t}`).join(' ');
+    const solution = eval(expr);
     if (solution <= 0) {
       //no negative answers, choose other random terms
       return createQuestion(op, ...rest);
     } else {
-      const expr = rest.map((size, i) => field(terms[i], size)).join(` ${op} `);
-      return `<span style='width: ${total}ch' onClick=${jx.ref(() => alert())}> ${expr} = </span>`;
+      const update = (el) => {
+        state.answer = el.value;
+        jx.setURLState(state);
+      };
+      const correct = `${solution}` === `${answer}`;
+      return `<span> ${expr} = <input type='number' class=${jx.cn({'correct': correct})} value='${answer}' onchange=${jx.ref(update)}></span>`;
     }
   }
 
-  function render(settings) {
+  function render() {
     return [
       '<div class=page>',
-      createQuestion(
-        jx.pickOne(...settings.operations),
-        ...settings.termLengths),
+      createQuestion(jx.getURLState()),
       '</div>'
     ].join('');
   }
 
-  jx.render(render, jx.getURLState());
+  jx.render(render);
 </script>
