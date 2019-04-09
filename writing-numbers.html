@@ -1,56 +1,54 @@
 <!doctype html>
 <html>
+
 <head>
   <meta charset="utf-8">
 
-  <title>Math Worksheet</title>
+  <title>Math Worksheet - number writing</title>
 
-  <link rel='shortcut icon' type='image/x-icon' href='favicon.png' >
+  <link rel='shortcut icon' type='image/x-icon' href='favicon.png'>
+  <link rel="stylesheet" type="text/css" href="main.css">
+  <script src='render.js'></script>
   <style>
-  body {
-    font-size: 35pt;
-    font-family: monospace;
-  }
-  
-  label {
-    display: block;
-    text-align: left;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-    margin: 10px;
-    line-height: 45pt;
-  }
-  
-  .center-line{
-    width: 14.8in;
-    position: absolute;
-    border-top: 1px dashed black;
-    margin-top: -22pt;
-  }
+    body {
+      font-size: 35pt;
+    }
 
-  .page{
-	  width: 15in;
-  }
+    label {
+      display: block;
+      text-align: left;
+      border-top: 1px solid black;
+      border-bottom: 1px solid black;
+      margin: 10px;
+      line-height: 45pt;
+    }
+
+    .center-line {
+      width: 14.8in;
+      position: absolute;
+      border-top: 1px dashed black;
+      margin-top: -22pt;
+    }
   </style>
 </head>
+
 <body>
 </body>
+
 </html>
 <script>
-  function write(a){
-	  document.write(a);
-  }
-  
-  function h_line(ch){
+  function h_line(ch) {
     return `<label>${ch}<div class='center-line'></div></label>`;
   }
-  
-  write('<div class=page>');
-  for (let i=0; i<10; i++){
-	  write(h_line(i));
+
+  function render() {
+    return [
+      '<div class=page>',
+      ...Array.from({
+        length: 20
+      }, (x, i) => h_line(i)),
+      '</div>',
+    ].join('');
   }
-  for (let i=0; i<10; i++){
-	  write(h_line(i));
-  }
-  write('</div>');
+  jx.render(render);
 </script>

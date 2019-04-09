@@ -2,92 +2,31 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
+    <meta charset="utf-8">
 
-  <title>Math Worksheet</title>
+    <title>Math World</title>
 
-  <link rel='shortcut icon' type='image/x-icon' href='favicon.png'>
-  <style>
-    body {
-      font-size: 35pt;
-      font-family: monospace;
-    }
-
-    span {
-      padding: 1ch 0;
-      display: inline-block;
-    }
-
-    label {
-      display: inline-block;
-      text-align: right;
-    }
-
-    .page {
-      width: 15in;
-    }
-
-    a {
-      color: black;
-      text-decoration: none;
-    }
-  </style>
+    <link rel='shortcut icon' type='image/x-icon' href='favicon.png'>
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <script src='render.js'></script>
 </head>
 
 <body>
+    <h1>Math World</h1>
+
+    <h2>Worksheets - Print outs</h2>
+    <ul>
+        <li>
+            <a href='worksheet.html?{"operations":["+","-"],"termLengths":[3,2]}'>26 Problem sheet, Add/Subtract with terms 3,2</a>
+        </li>
+        <li><a href='writing-letters.html'>writing letters</a></li>
+        <li><a href='writing-numbers.html'>writing numbers</a></li>
+    </ul>
+
+    <h2>Online Problems</h2>
+    <ul>
+        <li><a href='math-single.html'>single problem</a></li>
+    </ul>
 </body>
 
 </html>
-<script>
-  if (!document.location.search) {
-    const defaultSettings = {
-      operations: ['+', '-'],
-      termLengths: [3, 2]
-    };
-    document.location = `${document.location}?${JSON.stringify(defaultSettings)}`;
-  }
-
-  const write = document.write.bind(document);
-
-  function rand(size) {
-    const min = Math.pow(10, size - 1);
-    const max = Math.pow(10, size);
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
-
-  function pickOne(...op) {
-    return op[Math.floor(Math.random() * op.length)];
-  }
-
-  function field(a, size) {
-    return `<label style='width: ${size}ch'>${a}</label>`;
-  }
-
-  function createQuestion(op, ...rest) {
-    const total = rest.reduce((a, v, i) => a + v, 0) + 3 * (rest.length - 1) + 16;
-    const terms = rest.map(size => rand(size));
-    const solution = eval(terms.join(op));
-    if (solution <= 0) {
-      //no negative answers, choose other random terms
-      return createQuestion(op, ...rest);
-    } else {
-      const expr = rest.map((size, i) => field(terms[i], size)).join(` ${op} `);
-      return `<span style='width: ${total}ch'> ${expr} <a href='javascript:alert(${solution})'> = </a></span>`;
-    }
-  }
-
-  function render(settings) {
-    write('<div class=page>');
-    for (let i = 0; i < 26; i++) {
-      // generate a problem with 2 terms, first one 3 digits and second one 2 digits
-      write(createQuestion(pickOne(...settings.operations), ...settings.termLengths));
-    }
-    write('</div>');
-  }
-
-  const [settings] = [document.location.search.substring(1)]
-    .map(decodeURIComponent)
-    .map(JSON.parse);
-
-  render(settings);
-</script>

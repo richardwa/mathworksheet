@@ -4,13 +4,29 @@
 <head>
   <meta charset="utf-8">
 
-  <title>Math Worksheet</title>
+  <title>Math World - worksheet</title>
 
   <link rel='shortcut icon' type='image/x-icon' href='favicon.png'>
   <link rel="stylesheet" type="text/css" href="main.css">
   <script src='render.js'></script>
   <style>
+    body {
+      font-size: 35pt;
+    }
 
+    span {
+      padding: 1ch 0;
+      display: inline-block;
+    }
+
+    label {
+      display: inline-block;
+      text-align: right;
+    }
+
+    a {
+      color: black;
+    }
   </style>
 </head>
 
@@ -28,28 +44,35 @@
   }
 
   function field(a, size) {
-    return `<label style='width: ${size}ch'>${a}</label>`;
+    return `<label style='width: ${size}ch'>${a.toLocaleString()}</label>`;
   }
 
-  function createQuestion(op, ...rest) {
+  function question(op, ...rest) {
     const total = rest.reduce((a, v, i) => a + v, 0) + 3 * (rest.length - 1) + 16;
     const terms = rest.map(size => jx.rand(size));
     const solution = eval(terms.join(op));
     if (solution <= 0) {
       //no negative answers, choose other random terms
-      return createQuestion(op, ...rest);
+      return question(op, ...rest);
     } else {
       const expr = rest.map((size, i) => field(terms[i], size)).join(` ${op} `);
-      return `<span style='width: ${total}ch' onClick=${jx.ref(() => alert())}> ${expr} = </span>`;
+      return `<span style='width: ${total}ch'> ${expr} <a href='javascript:alert(${solution.toLocaleString()})'> = </a></span>`;
     }
   }
 
+  function listNumber(i) {
+    return `<i style='color:gray'>${(i + 1).toString().padStart(2, '0')})</i>`;
+  }
+
   function render(settings) {
+    const op = jx.pickOne(...settings.operations);
     return [
       '<div class=page>',
-      createQuestion(
-        jx.pickOne(...settings.operations),
-        ...settings.termLengths),
+      // generate a problem with 2 terms, first one 3 digits and second one 2 digits
+      ...Array.from({
+          length: 26
+        },
+        (x, i) => `${listNumber(i)}&nbsp;${question(op, ...settings.termLengths)}`),
       '</div>'
     ].join('');
   }

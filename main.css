@@ -1,0 +1,12 @@
+body {
+    font-size: 20pt;
+    font-family: monospace;
+}
+
+a {
+    text-decoration: none;
+}
+
+.page {
+    width: 15in;
+}
