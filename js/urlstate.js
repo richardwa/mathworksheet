@@ -3,7 +3,9 @@ export const getState = (defaultFn) => {
     const s = document.location.hash.substring(1);
     return JSON.parse(decodeURIComponent(s));
   } else {
-    return defaultFn ? defaultFn() : null;
+    const state = defaultFn ? defaultFn() : null;
+    setState(state);
+    return state;
   }
 };
 
