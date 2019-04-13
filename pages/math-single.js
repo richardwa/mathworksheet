@@ -30,12 +30,12 @@ function generateTerms({operations, termLengths}) {
 }
 
 function field({term, op = ''}) {
-  return `<label>${op} ${term.toLocaleString()}</label>`;
+  return `<label>${op} ${term?term.toLocaleString():''}</label>`;
 }
 
 function createQuestion({terms, answer}) {
   const fields = terms.map(field).join('');
-  return `<div style='width:10ch; padding:2ch'> ${fields} <hr /> ${field({term: answer})}</div>`;
+  return `<div style='width:10ch; padding:2ch'> ${fields} <hr /> ${field({term: parseInt(answer)})}</div>`;
 }
 
 function next() {
