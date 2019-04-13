@@ -1,8 +1,13 @@
 export const getState = (defaultFn) => {
-  if (document.location.hash) {
+  try {
     const s = document.location.hash.substring(1);
-    return JSON.parse(decodeURIComponent(s));
-  } else {
+    const state = JSON.parse(decodeURIComponent(s));
+    if (state) {
+      return state;
+    } else {
+      throw new Error('no state found');
+    }
+  } catch (e) {
     const state = defaultFn ? defaultFn() : null;
     setState(state);
     return state;

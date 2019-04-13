@@ -8,7 +8,6 @@
 
   <link rel='shortcut icon' type='image/x-icon' href='favicon.png'>
   <link rel="stylesheet" type="text/css" href="main.css">
-  <script src='render.js'></script>
   <style>
     body {
       font-size: 35pt;
@@ -34,14 +33,14 @@
 </body>
 
 </html>
-<script>
-  if (!jx.getURLState()) {
-    const defaultSettings = {
+<script type="module">
+  import * as jx from './js/render.js';
+  import {getState, setState, onStateChange} from './js/urlstate.js';
+  import {rand, pickOne} from './js/random.js';
+  const state = getState(() => ({
       operations: ['+', '-'],
       termLengths: [3, 2]
-    };
-    jx.setURLState(defaultSettings);
-  }
+    }));
 
   function field(a, size) {
     return `<label style='width: ${size}ch'>${a.toLocaleString()}</label>`;
@@ -51,9 +50,10 @@
     return `<i style='color:gray'>${(i + 1).toString().padStart(2, '0')})</i>`;
   }
 
-  function question(num, op, ...rest) {
+  function question(num, operations, ...rest) {
+    const op = pickOne(...operations);
     const total = rest.reduce((a, v, i) => a + v, 0) + 3 * (rest.length - 1) + 16;
-    const terms = rest.map(size => jx.rand(size));
+    const terms = rest.map(size => rand(size));
     const solution = eval(terms.join(op));
     if (solution <= 0) {
       //no negative answers, choose other random terms
@@ -69,18 +69,19 @@
     }
   }
 
-  function render(settings) {
-    const op = jx.pickOne(...settings.operations);
+  function render() {
+    const {operations, termLengths} = getState();
     return [
       '<div class=page>',
       // generate a problem with 2 terms, first one 3 digits and second one 2 digits
       ...Array.from({
           length: 26
         },
-        (x, i) => `${question(i, op, ...settings.termLengths)}`),
+        (x, i) => `${question(i, operations, ...termLengths)}`),
       '</div>'
     ].join('');
   }
 
-  jx.render(render, jx.getURLState());
+  const rerender = jx.render(render);
+  onStateChange(rerender);
 </script>

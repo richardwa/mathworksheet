@@ -1,6 +1,5 @@
 import * as jx from '../js/render.js';
 import {getState, setState} from '../js/urlstate.js';
-import {cn} from '../js/util.js';
 import {rand, pickOne} from '../js/random.js';
 import numpad from './numpad.js';
 
@@ -73,7 +72,6 @@ export default function render() {
   return [
     '<span style="display:inline-flex">',
     createQuestion(state),
-    '<br/>',
     numpad({onInput}),
     '<br/>',
     nextButton(),
