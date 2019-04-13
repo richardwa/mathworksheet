@@ -30,7 +30,7 @@ function generateTerms({operations, termLengths}) {
 }
 
 function field({term, op = ''}) {
-  return `<label>${op} ${term}</label>`;
+  return `<label>${op} ${term.toLocaleString()}</label>`;
 }
 
 function createQuestion({terms, answer}) {
