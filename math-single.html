@@ -3,65 +3,31 @@
 
 <head>
   <meta charset="utf-8">
-
   <title>Math Worksheet</title>
-
   <link rel='shortcut icon' type='image/x-icon' href='favicon.png'>
   <link rel="stylesheet" type="text/css" href="main.css">
-  <script src='render.js'></script>
   <style>
-    .correct {
-      border: 1px solid green;
+    label {
+      display: block;
+      width: 10ch;
+      height: 2ch;
+      text-align: right;
     }
   </style>
 </head>
 
-<body>
-</body>
+<body> </body>
 
 </html>
-<script>
-  if (!jx.getURLState()) {
-    const state = {
-      operations: ['+', '-'],
-      terms: [3, 2],
-      answer: '126'
-    };
-    jx.setURLState(state);
+<script type="module">
+  import { render } from './js/render.js';
+  import SingleProblem from './pages/math-single.js';
+  import { onStateChange } from './js/urlstate.js';
+
+  function body() {
+    return SingleProblem();
   }
 
-  function field(a, size) {
-    return `<label style='width: ${size}ch'>${a}</label>`;
-  }
-
-  function createQuestion(state) {
-    const {
-      operations,
-      terms,
-      answer
-    } = state;
-    const expr = terms.map((t, i) => `${operations[i]} ${t}`).join(' ');
-    const solution = eval(expr);
-    if (solution <= 0) {
-      //no negative answers, choose other random terms
-      return createQuestion(op, ...rest);
-    } else {
-      const update = (el) => {
-        state.answer = el.value;
-        jx.setURLState(state);
-      };
-      const correct = `${solution}` === `${answer}`;
-      return `<span> ${expr} = <input type='number' class=${jx.cn({'correct': correct})} value='${answer}' onchange=${jx.ref(update)}></span>`;
-    }
-  }
-
-  function render() {
-    return [
-      '<div class=page>',
-      createQuestion(jx.getURLState()),
-      '</div>'
-    ].join('');
-  }
-
-  jx.render(render);
+  const rerender = render(body);
+  onStateChange(rerender);
 </script>
