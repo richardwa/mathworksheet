@@ -54,8 +54,9 @@ function onInput(key) {
   const state = getState();
   if (key === 'C') {
     setState({...state, answer: defaultState.answer});
-  } else if (key === '🡠') {
-    setState({...state, answer: state.answer.substring(0, state.answer.length - 1)});
+  } else if (key === '&larr;') {
+    setState(
+        {...state, answer: state.answer.substring(0, state.answer.length - 1)});
   } else {
     setState({...state, answer: state.answer + key});
   }

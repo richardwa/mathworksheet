@@ -17,7 +17,7 @@ function numpad({onInput, size = 4}) {
       onInput('C');
     }
     if (key === 'Backspace') {
-      onInput('🡠');
+      onInput('&larr;');
     } else if (`${key}`.match(/[0-9]/)) {
       onInput(key);
     }
@@ -28,7 +28,7 @@ function numpad({onInput, size = 4}) {
     row(cell(7), cell(8), cell(9)),
     row(cell(4), cell(5), cell(6)),
     row(cell(1), cell(2), cell(3)),
-    row(cell(0), cell('🡠'), cell('C')),
+    row(cell(0), cell('&larr;'), cell('C')),
     '</table>'
   ].join('');
 }
