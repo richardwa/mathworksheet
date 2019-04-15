@@ -1,7 +1,16 @@
-import * as jx from '../js/render.js';
+import {h} from '../lib/preact.js';
+import {createSheet} from '../js/jss.js';
+
 import {getState, setState} from '../js/urlstate.js';
 import {rand, pickOne} from '../js/random.js';
-import numpad from './numpad.js';
+import numpad, {key_bs, key_clear} from './numpad.js';
+import {cn} from '../js/util.js';
+
+const {classes} = createSheet({
+  correct: {
+    'color': 'green',
+  },
+});
 
 
 function getExpr(terms) {
@@ -30,12 +39,12 @@ function generateTerms({operations, termLengths}) {
 }
 
 function field({term, op = ''}) {
-  return `<label>${op} ${term?term.toLocaleString():''}</label>`;
+  return h('label', null, `${op} ${term?term.toLocaleString():''}`);
 }
 
 function createQuestion({terms, answer}) {
-  const fields = terms.map(field).join('');
-  return `<div style='width:10ch; padding:2ch'> ${fields} <hr /> ${field({term: parseInt(answer)})}</div>`;
+  const fields = terms.map(field);
+  return h('div', null, ...fields, h('hr'), field({term: parseInt(answer)}));
 }
 
 function next() {
@@ -45,16 +54,16 @@ function next() {
 
 function nextButton() {
   const correct = isCorrect(getState());
-  const style = correct ? 'color:green' : '';
-  const text = correct ? '<b>CORRECT!</b> next' : 'skip';
-  return `<button style='margin:2ch; width:10ch; height:10ch; ${style}' onclick=${jx.ref(next)}>${text}</button>`;
+  return h('button', {onclick: next, class: cn({[classes.correct]: correct})},
+           correct ? h('b', null, 'CORRECT!') : '',
+           correct ? 'next' : 'skip', );
 }
 
 function onInput(key) {
   const state = getState();
-  if (key === 'C') {
-    setState({...state, answer: defaultState.answer});
-  } else if (key === '&larr;') {
+  if (key === key_clear) {
+    setState({...state, answer: ''});
+  } else if (key === key_bs) {
     setState(
         {...state, answer: state.answer.substring(0, state.answer.length - 1)});
   } else {
@@ -62,22 +71,13 @@ function onInput(key) {
   }
 }
 
-const defaultState = {
-  operations: ['+', '-'],
-  termLengths: [3, 2],
-  answer: ''
-};
-
-export default function render() {
-  const state =
-      getState(() => ({...defaultState, terms: generateTerms(defaultState)}));
-
-  return [
-    '<span style="display:inline-flex">',
-    createQuestion(state),
-    numpad({onInput}),
-    '<br/>',
-    nextButton(),
-    '</span>',
-  ].join('');
+export default function render(state) {
+  const {terms} = state;
+  if (terms) {
+    return h('span', null, createQuestion(state), numpad({onInput}), h('br'),
+             nextButton());
+  } else {
+    next();
+    return null;
+  }
 }

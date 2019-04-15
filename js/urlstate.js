@@ -1,22 +1,22 @@
-export const getState = (defaultFn) => {
+
+const getHashState = () => {
   try {
     const s = document.location.hash.substring(1);
-    const state = JSON.parse(decodeURIComponent(s));
-    if (state) {
-      return state;
-    } else {
-      throw new Error('no state found');
-    }
+    const json = JSON.parse(decodeURIComponent(s));
+    return json;
   } catch (e) {
-    const state = defaultFn ? defaultFn() : null;
-    setState(state);
-    return state;
+    return undefined;
   }
 };
 
-export const setState = (state) => {
-  document.location = `${document.location.pathname}#${JSON.stringify(state)}`;
-  return state;
+let state = getHashState();
+
+export const getState = (defaultState) => {
+  if (state) {
+    return state;
+  } else {
+    setState(defaultState);
+  }
 };
 
 const listeners = [];
@@ -24,7 +24,29 @@ export const onStateChange = f => {
   listeners.push(f);
 };
 
-window.onhashchange = function() {
-  const state = getState();
-  listeners.forEach(f => f(state));
-}
+const onhashchange = () => {
+  const newState = getHashState();
+  listeners.forEach(f => f(newState, state));
+  state = newState;
+};
+window.onhashchange = onhashchange;
+
+export const updateState = (s) => {
+  let hasChanges = false;
+  for (let k in s) {
+    if (state[k] !== s[k]) {
+      hasChanges = true;
+      break;
+    }
+  }
+  if (hasChanges) {
+    setState({...state, ...s});
+  }
+};
+
+export const setState = (s) => {
+  if (s === state) {
+    return;
+  }
+  document.location = `${document.location.pathname}#${JSON.stringify(s)}`;
+};
