@@ -3,17 +3,48 @@ import {createSheet} from '../js/jss.js';
 
 import {getState, setState} from '../js/urlstate.js';
 import {rand, pickOne} from '../js/random.js';
-import numpad, {key_bs, key_clear} from './numpad.js';
+import numpad, { key_bs, key_clear }
+from './numpad.js';
 import {cn} from '../js/util.js';
 
+const fontSize = '40pt';
 const {classes} = createSheet({
   correct: {
     'color': 'green',
   },
+  container: {
+    'font-size': fontSize,
+    'display': 'flex',
+    'flex-direction': 'row',
+    'justify-content':'center',
+    'flex-wrap':'wrap',
+  },
+  button: {
+    'font-size': fontSize,
+    'height': '4ch',
+    'width':'100%',
+    'display':'block',
+  },
+  label: {
+    'display': 'block',
+    'padding-right':'0.5ch',
+    'height': '2ch',
+    'text-align': 'right',
+  },
+  questionBox:{
+    'margin-top':'1ch',
+  },
+  leftBox:{
+    'display':'inline-block',
+    'width': '10ch',
+    'margin': '0 1ch 1ch 1ch'
+  },
 });
 
+const truncate = s=> s.substring(0,5);
 
-function getExpr(terms) {
+
+function getExpr(terms = []) {
   return terms.map(({term, op}) => `${op} ${term}`).join(' ');
 };
 
@@ -39,45 +70,57 @@ function generateTerms({operations, termLengths}) {
 }
 
 function field({term, op = ''}) {
-  return h('label', null, `${op} ${term?term.toLocaleString():''}`);
+  return h('label', {class: [classes.label]},
+           `${op} ${term?term.toLocaleString():''}`);
 }
 
 function createQuestion({terms, answer}) {
   const fields = terms.map(field);
-  return h('div', null, ...fields, h('hr'), field({term: parseInt(answer)}));
+  return h('div', {class:[classes.questionBox]} , ...fields, h('hr'), field({term: parseInt(answer)}));
 }
 
-function next() {
+function next(replace) {
   const state = getState();
-  setState({...state, answer: '', terms: generateTerms(state)})
+  setState({...state, answer: '', terms: generateTerms(state)}, replace === true);
 }
 
 function nextButton() {
   const correct = isCorrect(getState());
-  return h('button', {onclick: next, class: cn({[classes.correct]: correct})},
-           correct ? h('b', null, 'CORRECT!') : '',
-           correct ? 'next' : 'skip', );
+  return h('button',
+           {
+             onclick: next,
+             class: cn({[classes.correct]: correct, [classes.button]: true})
+           },
+           correct ? h('b', null, 'CORRECT!') : 'skip',
+           );
 }
 
 function onInput(key) {
   const state = getState();
+  // use setState(..., true) here so that browser history doesnt grow from key strokes
   if (key === key_clear) {
-    setState({...state, answer: ''});
+    setState({...state, answer: ''}, true);
   } else if (key === key_bs) {
     setState(
-        {...state, answer: state.answer.substring(0, state.answer.length - 1)});
+        {...state, answer: state.answer.substring(0, state.answer.length - 1)}, true);
   } else {
-    setState({...state, answer: state.answer + key});
+    setState({...state, answer: truncate(state.answer + key)}, true);
   }
 }
 
-export default function render(state) {
-  const {terms} = state;
+export default function render(props) {
+  const {terms} = props;
+  console.log(props);
   if (terms) {
-    return h('span', null, createQuestion(state), numpad({onInput}), h('br'),
-             nextButton());
+    return h('div', {class: [classes.container]}, 
+      h('div', {class:[classes.leftBox]}, 
+        nextButton(),
+        createQuestion(props),
+      ),
+      numpad({onInput}), 
+    );
   } else {
-    next();
+    next(true);
     return null;
   }
 }

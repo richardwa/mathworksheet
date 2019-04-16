@@ -5,19 +5,22 @@ export const key_bs = String.fromCharCode(8592);
 export const key_clear = 'C';
 const {classes} = createSheet({
   button: {
-    'height': '4ch',
-    'width': '4ch',
+    'font-size': '40pt',
     'text-align': 'center',
+    'margin':'1px',
+  },
+  container:{
+    'display':'inline-grid',
+    'vertical-align':'top',
+    'grid-template-columns': 'repeat(3, 4ch)',
+    'grid-template-rows': 'repeat(4, 4ch)',
   },
 });
-function row(...cells) {
-  return h('tr', null, ...cells);
-}
 
 function numpad({onInput}) {
 
   function cell(content) {
-    return h('td',null, h('button',{class:[classes.button], onclick: ()=> onInput(content)},content));
+    return h('button',{class:[classes.button], onclick: ()=> onInput(content)},content);
   }
 
   window.onkeydown = function({key}) {
@@ -32,11 +35,11 @@ function numpad({onInput}) {
     }
   };
 
-  return h('table',null,
-    row(cell(7), cell(8), cell(9)),
-    row(cell(4), cell(5), cell(6)),
-    row(cell(1), cell(2), cell(3)),
-    row(cell(0), cell(key_bs), cell(key_clear)),
+  return h('div',{class:[classes.container]},
+    cell(7), cell(8), cell(9),
+    cell(4), cell(5), cell(6),
+    cell(1), cell(2), cell(3),
+    cell(0), cell(key_bs), cell(key_clear),
   );
 }
 

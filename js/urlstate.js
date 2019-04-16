@@ -1,21 +1,29 @@
 
-const getHashState = () => {
+const parseStateFromURL = (url) => {
   try {
-    const s = document.location.hash.substring(1);
-    const json = JSON.parse(decodeURIComponent(s));
+    let json;
+    const index = url.indexOf('#');
+    if (index >= 0) {
+      const hash = url.substring(index + 1);
+      json = JSON.parse(decodeURIComponent(hash));
+    }
     return json;
   } catch (e) {
     return undefined;
   }
 };
 
-let state = getHashState();
+// initialize state on page load
+let state = parseStateFromURL(location.href);
 
 export const getState = (defaultState) => {
   if (state) {
     return state;
   } else {
-    setState(defaultState);
+    const url = `${document.location.pathname}#${JSON.stringify(defaultState)}`;
+    history.replaceState(null, null, url);
+    state = defaultState;
+    return defaultState;
   }
 };
 
@@ -24,12 +32,11 @@ export const onStateChange = f => {
   listeners.push(f);
 };
 
-const onhashchange = () => {
-  const newState = getHashState();
-  listeners.forEach(f => f(newState, state));
-  state = newState;
+window.onhashchange = (e) => {
+  const json = parseStateFromURL(e.newURL);
+  listeners.forEach(f => f(json, state));
+  state = json;
 };
-window.onhashchange = onhashchange;
 
 export const updateState = (s) => {
   let hasChanges = false;
@@ -44,9 +51,17 @@ export const updateState = (s) => {
   }
 };
 
-export const setState = (s) => {
+export const setState = (s, replace) => {
   if (s === state) {
     return;
   }
-  document.location = `${document.location.pathname}#${JSON.stringify(s)}`;
+  const old = state;
+  state = s;
+  const url = `${document.location.pathname}#${JSON.stringify(s)}`;
+  if (replace) {
+    history.replaceState(null, null, url);
+  } else {
+    history.pushState(null, null, url);
+  }
+  listeners.forEach(f => f(s, old));
 };
