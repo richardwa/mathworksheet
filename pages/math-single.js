@@ -21,7 +21,7 @@ const {classes} = createSheet({
   },
   button: {
     'font-size': fontSize,
-    'height': '4ch',
+    'height': 'calc(4ch - 2px)',
     'width':'100%',
     'display':'block',
   },
