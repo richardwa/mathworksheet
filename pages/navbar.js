@@ -7,10 +7,13 @@ const {classes} = createSheet({
   navbar: {
     'margin-bottom': '20px',
     'font-size': fontSize,
+    'background-color': '#9bc3c8',
+    'padding':'10px',
   },
   button: {
     'font-size': fontSize,
     'text-decoration': 'none',
+    'margin':'2px',
   }
 });
 

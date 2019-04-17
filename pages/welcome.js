@@ -5,6 +5,7 @@ import {createSheet} from '../js/jss.js';
 const {classes} = createSheet({
   container: {
     'font-size': '18pt',
+    'margin':'10px',
   },
   a: {
     'text-decoration': 'none',
