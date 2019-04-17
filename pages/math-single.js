@@ -92,7 +92,7 @@ function nextButton() {
 
 function onInput(key) {
   const state = getState();
-  const solution = getExpr(state.terms);
+  const solution = eval(getExpr(state.terms));
   // use setState(..., true) here so that browser history doesnt grow from key
   // strokes
   if (key === key_clear) {
@@ -103,7 +103,7 @@ function onInput(key) {
         true);
   } else {
     setState(
-        {...state, answer: truncate(state.answer + key, `${solution}`.length)},
+        {...state, answer: truncate(state.answer + key, `${solution}`.length+1)},
         true);
   }
 }
