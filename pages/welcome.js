@@ -7,7 +7,7 @@ const {classes} = createSheet({
     'font-size': '18pt',
   },
   a: {
-    'text-decoration':'none',
+    'text-decoration': 'none',
   }
 });
 
@@ -29,14 +29,14 @@ const numbers = Array.from({length: 20}, (x, i) => `${i}`);
 const page = () => h('div', {class: [classes.container]}, [
   h1('Math World'),
   h2('Print outs'),
-  ul(li(a({onclick: () => updateState({page: 'worksheet', ...settings})},
+  ul(li(a({onclick: () => updateState({page: './pages/worksheet.js', ...settings})},
           'Add/Subtract worksheet')),
-     li(a({onclick: () => updateState({page: 'line-paper', lines: alphabets})},
+     li(a({onclick: () => updateState({page: './pages/line-paper.js', lines: alphabets})},
           'line paper - letters')),
-     li(a({onclick: () => updateState({page: 'line-paper', lines: numbers})},
+     li(a({onclick: () => updateState({page: './pages/line-paper.js', lines: numbers})},
           'line paper - numbers')), ),
   h2('Online App'),
-  ul(li(a({onclick: () => updateState({page: 'math-single', ...settings})},
+  ul(li(a({onclick: () => updateState({page: './pages/math-single.js', ...settings})},
           'Add/Subtract practice (tablet optimized)')))
 ]);
 

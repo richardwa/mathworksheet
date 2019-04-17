@@ -1,8 +1,9 @@
 import {h, render, Component, rerender} from './lib/preact.js';
-import {getState, onStateChange} from './js/urlstate.js';
+import {getState, onStateChange, setState} from './js/urlstate.js';
+import {navbar} from './pages/navbar.js';
 
 const defaultState = {
-  page: 'welcome'
+  page: './pages/welcome.js'
 };
 
 class Main extends Component {
@@ -13,11 +14,11 @@ class Main extends Component {
     const state = getState(defaultState);
     this.fetchPage(state.page);
     onStateChange((newState = defaultState, oldState) => {
-        this.fetchPage(newState.page);
-        // required for forcing update
-        // somehow forceUpdate() does not work here
-        // we actually are not using the actual state anywhere
-        this.setState(newState); 
+      this.fetchPage(newState.page);
+      // required for forcing update
+      // somehow forceUpdate() does not work here
+      // we actually are not using the actual state anywhere
+      this.setState(newState);
     });
   }
 
@@ -25,7 +26,7 @@ class Main extends Component {
   fetchPage(page) {
     if (page && !this.componentCache.has(page)) {
       console.log('fetching', page);
-      import(`./pages/${page}.js`) .then((mod) => {
+      import(page) .then((mod) => {
         this.componentCache.set(page, mod.default);
         this.forceUpdate();
       });
@@ -37,9 +38,10 @@ class Main extends Component {
     const {page, ...rest} = state;
     const component = this.componentCache.get(page);
     console.log('rendering', component !== undefined, state);
-    const vdom = component ? h(component, rest) : null;
-    console.log(vdom);
-    return vdom;
+    const content = component ? h(component, rest) : null;
+    // console.log(content);
+
+    return h('div', null, h(navbar), content);
   }
 }
 render(h(Main), document.body);

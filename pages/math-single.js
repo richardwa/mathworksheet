@@ -3,8 +3,7 @@ import {createSheet} from '../js/jss.js';
 
 import {getState, setState} from '../js/urlstate.js';
 import {rand, pickOne} from '../js/random.js';
-import numpad, { key_bs, key_clear }
-from './numpad.js';
+import numpad, { key_bs, key_clear } from './numpad.js';
 import {cn} from '../js/util.js';
 
 const fontSize = '40pt';
@@ -16,33 +15,29 @@ const {classes} = createSheet({
     'font-size': fontSize,
     'display': 'flex',
     'flex-direction': 'row',
-    'justify-content':'center',
-    'flex-wrap':'wrap',
+    'justify-content': 'center',
+    'flex-wrap': 'wrap',
   },
   button: {
     'font-size': fontSize,
     'height': 'calc(4ch - 2px)',
-    'width':'100%',
-    'display':'block',
+    'width': '100%',
+    'display': 'block',
   },
   label: {
     'display': 'block',
-    'padding-right':'0.5ch',
+    'padding-right': '0.5ch',
     'height': '2ch',
     'text-align': 'right',
   },
-  questionBox:{
-    'margin-top':'1ch',
+  questionBox: {
+    'margin-top': '1ch',
   },
-  leftBox:{
-    'display':'inline-block',
-    'width': '10ch',
-    'margin': '0 1ch 1ch 1ch'
-  },
+  leftBox:
+      {'display': 'inline-block', 'width': '10ch', 'margin': '0 1ch 1ch 1ch'},
 });
 
-const truncate = s=> s.substring(0,5);
-
+const truncate = (s, n) => s.substring(0, n);
 
 function getExpr(terms = []) {
   return terms.map(({term, op}) => `${op} ${term}`).join(' ');
@@ -76,35 +71,40 @@ function field({term, op = ''}) {
 
 function createQuestion({terms, answer}) {
   const fields = terms.map(field);
-  return h('div', {class:[classes.questionBox]} , ...fields, h('hr'), field({term: parseInt(answer)}));
+  return h('div', {class: [classes.questionBox]}, ...fields, h('hr'),
+           field({term: parseInt(answer)}));
 }
 
 function next(replace) {
   const state = getState();
-  setState({...state, answer: '', terms: generateTerms(state)}, replace === true);
+  setState({...state, answer: '', terms: generateTerms(state)},
+           replace === true);
 }
 
 function nextButton() {
   const correct = isCorrect(getState());
-  return h('button',
-           {
-             onclick: next,
-             class: cn({[classes.correct]: correct, [classes.button]: true})
-           },
-           correct ? h('b', null, 'CORRECT!') : 'skip',
-           );
+  const buttonProps = {
+    onclick: next,
+    class: cn({[classes.correct]: correct, [classes.button]: true})
+  };
+  return h('button', buttonProps, correct ? h('b', null, 'CORRECT!') : 'skip');
 }
 
 function onInput(key) {
   const state = getState();
-  // use setState(..., true) here so that browser history doesnt grow from key strokes
+  const solution = getExpr(state.terms);
+  // use setState(..., true) here so that browser history doesnt grow from key
+  // strokes
   if (key === key_clear) {
     setState({...state, answer: ''}, true);
   } else if (key === key_bs) {
     setState(
-        {...state, answer: state.answer.substring(0, state.answer.length - 1)}, true);
+        {...state, answer: state.answer.substring(0, state.answer.length - 1)},
+        true);
   } else {
-    setState({...state, answer: truncate(state.answer + key)}, true);
+    setState(
+        {...state, answer: truncate(state.answer + key, `${solution}`.length)},
+        true);
   }
 }
 
@@ -112,13 +112,10 @@ export default function render(props) {
   const {terms} = props;
   console.log(props);
   if (terms) {
-    return h('div', {class: [classes.container]}, 
-      h('div', {class:[classes.leftBox]}, 
-        nextButton(),
-        createQuestion(props),
-      ),
-      numpad({onInput}), 
-    );
+    return h('div', {class: [classes.container]},
+             h('div', {class: [classes.leftBox]}, nextButton(),
+               createQuestion(props)),
+             numpad({onInput}));
   } else {
     next(true);
     return null;
