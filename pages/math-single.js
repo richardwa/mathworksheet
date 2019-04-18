@@ -3,7 +3,8 @@ import {createSheet} from '../js/jss.js';
 
 import {getState, setState} from '../js/urlstate.js';
 import {rand, pickOne} from '../js/random.js';
-import numpad, { key_bs, key_clear } from './numpad.js';
+import numpad, { key_bs, key_clear }
+from './numpad.js';
 import {cn} from '../js/util.js';
 
 const fontSize = '40pt';
@@ -66,13 +67,13 @@ function generateTerms({operations, termLengths}) {
 
 function field({term, op = ''}) {
   return h('label', {class: [classes.label]},
-           `${op} ${term?term.toLocaleString():''}`);
+           `${op} ${term !== undefined?term.toLocaleString():''}`);
 }
 
 function createQuestion({terms, answer}) {
   const fields = terms.map(field);
   return h('div', {class: [classes.questionBox]}, ...fields, h('hr'),
-           field({term: parseInt(answer)}));
+           field({term: answer ? parseInt(answer) : ''}));
 }
 
 function next(replace) {
@@ -102,9 +103,10 @@ function onInput(key) {
         {...state, answer: state.answer.substring(0, state.answer.length - 1)},
         true);
   } else {
-    setState(
-        {...state, answer: truncate(state.answer + key, `${solution}`.length+1)},
-        true);
+    let answer = `${state.answer}${key}`;
+    answer = truncate(answer, `${solution}`.length + 1);
+    answer = `${parseInt(answer)}`;
+    setState({...state, answer}, true);
   }
 }
 

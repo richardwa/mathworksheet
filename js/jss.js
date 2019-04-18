@@ -1,12 +1,17 @@
 
 let count = 10000;
-export function createSheet(styles) {
+export function createSheet(styles, attrs) {
   let sheet = document.createElement('style');
+  if (attrs) {
+    for (const key in attrs) {
+      sheet.setAttribute(key, attrs[key]);
+    }
+  }
   let classes = {};
   let rules = [];
   let cache = new Map();
   for (let ruleName in styles) {
-    let className = ruleName + '_' + count.toString(16);
+    let className = `${ruleName}-${count.toString(16)}`;
     count++;
     let style = styles[ruleName];
     if (cache.has(style)) {

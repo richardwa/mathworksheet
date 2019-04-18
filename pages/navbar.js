@@ -8,15 +8,17 @@ const {classes} = createSheet({
     'margin-bottom': '20px',
     'font-size': fontSize,
     'background-color': '#9bc3c8',
-    'padding':'10px',
+    'padding': '10px',
   },
   button: {
     'font-size': fontSize,
     'text-decoration': 'none',
-    'margin':'2px',
+    'margin': '2px',
   }
 });
 
+const print =
+    createSheet({noPrint: {'display': 'none !important'}}, {media: 'print'});
 
 const settings = {
   operations: ['+', '-'],
@@ -27,26 +29,30 @@ const alphabets = Array.from(
 const numbers = Array.from({length: 20}, (x, i) => `${i}`);
 
 const Link = (name, url, settings) =>
-    h('button', {onclick: () => setState({page: url, ...settings}), class:[classes.button]}, name);
+    h('button', {
+        onclick: () => setState({page: url, ...settings}),
+        class: [classes.button]
+      },
+      name);
 const Sep = h('b', null, '|');
 const Home = Link('Home', './pages/welcome.js');
 const PrintAdd = Link('Worksheet', './pages/worksheet.js', settings);
-const PrintAlpha =
-    Link('Numbers', './pages/line-paper.js', {lines: numbers});
+const PrintAlpha = Link('Numbers', './pages/line-paper.js', {lines: numbers});
 const PrintNumber =
     Link('Alphabets', './pages/line-paper.js', {lines: alphabets});
 const App = Link('Quiz', './pages/math-single.js', settings);
 
 
 
-export const navbar = () => h('div', {class: [classes.navbar, 'no-print'].join(' ')}, [
-  Home,
-  Sep,
-  'Print Outs: ',
-  PrintAdd,
-  PrintNumber,
-  PrintAlpha,
-  Sep,
-  'App: ',
-  App,
-]);
+export const navbar = () =>
+    h('div', {class: [classes.navbar, print.classes.noPrint].join(' ')}, [
+      Home,
+      Sep,
+      'Print Outs: ',
+      PrintAdd,
+      PrintNumber,
+      PrintAlpha,
+      Sep,
+      'App: ',
+      App,
+    ]);
