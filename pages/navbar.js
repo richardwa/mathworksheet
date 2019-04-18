@@ -50,7 +50,7 @@ export const navbar = () =>
     h('div', {class: [classes.navbar, print.classes.noPrint].join(' ')}, [
       Home,
       Sep,
-      'Sheets: ',
+      'Writing sheets: ',
       PrintNumber,
       PrintAlpha,
       PrintAlphaCaps,
