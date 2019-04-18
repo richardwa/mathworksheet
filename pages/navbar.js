@@ -1,7 +1,6 @@
 import {h} from '../lib/preact.js';
 import {setState, getState} from '../js/urlstate.js';
 import {createSheet} from '../js/jss.js';
-import {hashCode, toHex} from '../js/util.js';
 
 const fontSize = '14pt';
 const {classes} = createSheet({
@@ -15,6 +14,7 @@ const {classes} = createSheet({
     'text-decoration': 'underline',
   },
   button: {
+    'cursor': 'pointer',
     'font-size': fontSize,
     'margin': '2px',
   }
