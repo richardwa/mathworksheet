@@ -1,27 +1,35 @@
 import {h} from '../lib/preact.js';
 import {createSheet} from '../js/jss.js';
 
+const size = '32pt';
 const {classes} = createSheet({
-  container: {'font-size': '35pt'},
+  container: {
+    'font-size': size,
+    'width':'14in'
+  },
   label: {
     'display': 'block',
     'text-align': 'left',
     'border-top': '1px solid black',
     'border-bottom': '1px solid black',
     'margin': '10px',
-    'line-height': '45pt',
+    'height': size,
+  },
+  text: {
+    'font-weight':'normal',
+    'margin-top':'-1.5rem',
+    'position':'absolute',
   },
   centerline: {
-    'width': '14.8in',
-    'position': 'absolute',
-    'border-top': '1px dashed black',
-    'margin-top': '-22pt',
+    'height': '50%',
+    'border-bottom': '1px dashed black',
   }
 });
 
 function h_line(ch) {
-  return h('label', {class: [classes.label]}, ch,
-           h('div', {class: [classes.centerline]}));
+  return h('label', {class: [classes.label]}, 
+           h('div', {class: [classes.centerline]}),
+           h('b', {class: classes.text}, ch));
 }
 
 function render({lines}) {

@@ -26,7 +26,7 @@ const settings = {
 
 const alphabets = Array.from(
     {length: 26}, (x, i) => String.fromCharCode(i + ('a'.charCodeAt(0))));
-const numbers = Array.from({length: 20}, (x, i) => `${i}`);
+const numbers = Array.from({length: 26}, (x, i) => `${i%10}`);
 const page = () => h('div', {class: [classes.container]}, [
   h1('Math World'),
   h2('Print outs'),

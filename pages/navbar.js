@@ -26,7 +26,9 @@ const settings = {
 };
 const alphabets = Array.from(
     {length: 26}, (x, i) => String.fromCharCode(i + ('a'.charCodeAt(0))));
-const numbers = Array.from({length: 20}, (x, i) => `${i}`);
+const alphabetCaps = Array.from(
+    {length: 26}, (x, i) => String.fromCharCode(i + ('A'.charCodeAt(0))));
+const numbers = Array.from({length: 26}, (x, i) => `${i%10}`);
 
 const Link = (name, url, settings) =>
     h('button', {
@@ -37,9 +39,9 @@ const Link = (name, url, settings) =>
 const Sep = h('b', null, '|');
 const Home = Link('Home', './pages/welcome.js');
 const PrintAdd = Link('Worksheet', './pages/worksheet.js', settings);
-const PrintAlpha = Link('Numbers', './pages/line-paper.js', {lines: numbers});
-const PrintNumber =
-    Link('Alphabets', './pages/line-paper.js', {lines: alphabets});
+const PrintNumber = Link('Numbers', './pages/line-paper.js', {lines: numbers});
+const PrintAlpha = Link('alphabet', './pages/line-paper.js', {lines: alphabets});
+const PrintAlphaCaps = Link('ALPHABET', './pages/line-paper.js', {lines: alphabetCaps});
 const App = Link('Quiz', './pages/math-single.js', settings);
 
 
@@ -48,11 +50,12 @@ export const navbar = () =>
     h('div', {class: [classes.navbar, print.classes.noPrint].join(' ')}, [
       Home,
       Sep,
-      'Print Outs: ',
-      PrintAdd,
+      'Sheets: ',
       PrintNumber,
       PrintAlpha,
+      PrintAlphaCaps,
       Sep,
-      'App: ',
+      'Math: ',
       App,
+      PrintAdd,
     ]);
