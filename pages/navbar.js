@@ -1,6 +1,7 @@
 import {h} from '../lib/preact.js';
-import {setState, updateState} from '../js/urlstate.js';
+import {setState, getState} from '../js/urlstate.js';
 import {createSheet} from '../js/jss.js';
+import {hashCode, toHex} from '../js/util.js';
 
 const fontSize = '14pt';
 const {classes} = createSheet({
@@ -10,9 +11,11 @@ const {classes} = createSheet({
     'background-color': '#9bc3c8',
     'padding': '10px',
   },
+  current: {
+    'text-decoration': 'underline',
+  },
   button: {
     'font-size': fontSize,
-    'text-decoration': 'none',
     'margin': '2px',
   }
 });
@@ -30,32 +33,34 @@ const alphabetCaps = Array.from(
     {length: 26}, (x, i) => String.fromCharCode(i + ('A'.charCodeAt(0))));
 const numbers = Array.from({length: 26}, (x, i) => `${i%10}`);
 
-const Link = (name, url, settings) =>
-    h('button', {
-        onclick: () => setState({page: url, ...settings}),
-        class: [classes.button]
-      },
-      name);
+const Link = (name, page, settings) => {
+  const state = getState();
+  const css = [classes.button];
+  if (state.navButton === name) {
+    css.push(classes.current);
+  }
+  return h('button',
+           {
+             onclick: () => setState({page, navButton: name, ...settings}),
+             class: css.join(' ')
+           },
+           name);
+};
+
 const Sep = h('b', null, '|');
-const Home = Link('Home', './pages/welcome.js');
-const PrintAdd = Link('Worksheet', './pages/worksheet.js', settings);
-const PrintNumber = Link('Numbers', './pages/line-paper.js', {lines: numbers});
-const PrintAlpha = Link('alphabet', './pages/line-paper.js', {lines: alphabets});
-const PrintAlphaCaps = Link('ALPHABET', './pages/line-paper.js', {lines: alphabetCaps});
-const App = Link('Quiz', './pages/math-single.js', settings);
+const Home = () => Link('Home', './pages/welcome.js');
+const PrintAdd = () => Link('Worksheet', './pages/worksheet.js', settings);
+const PrintNumber = () =>
+    Link('Numbers', './pages/line-paper.js', {lines: numbers});
+const PrintAlpha = () =>
+    Link('alphabet', './pages/line-paper.js', {lines: alphabets});
+const PrintAlphaCaps = () =>
+    Link('ALPHABET', './pages/line-paper.js', {lines: alphabetCaps});
+const App = () => Link('App', './pages/math-single.js', settings);
 
 
 
 export const navbar = () =>
-    h('div', {class: [classes.navbar, print.classes.noPrint].join(' ')}, [
-      Home,
-      Sep,
-      'Writing sheets: ',
-      PrintNumber,
-      PrintAlpha,
-      PrintAlphaCaps,
-      Sep,
-      'Math: ',
-      App,
-      PrintAdd,
-    ]);
+    h('div', {class: [classes.navbar, print.classes.noPrint].join(' ')}, Home(),
+      Sep, 'Writing sheets: ', PrintNumber(), PrintAlpha(), PrintAlphaCaps(),
+      Sep, 'Math: ', App(), PrintAdd(), );
