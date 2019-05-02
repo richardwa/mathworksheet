@@ -5,10 +5,14 @@ export const seedRandom = (seed) => {
   arng = new Alea(seed);
 };
 
+export const randRange = (min, max) => {
+  return Math.floor(arng.next() * (max - min)) + min;
+};
+
 export const rand = (size) => {
   const min = Math.pow(10, size - 1);
   const max = Math.pow(10, size);
-  return Math.floor(arng.next() * (max - min)) + min;
+  return randRange(min, max);
 };
 
 export const pickOne = (...op) => {

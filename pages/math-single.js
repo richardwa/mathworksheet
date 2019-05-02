@@ -3,8 +3,7 @@ import {createSheet} from '../js/jss.js';
 
 import {getState, setState} from '../js/urlstate.js';
 import {rand, pickOne} from '../js/random.js';
-import numpad, { key_bs, key_clear }
-from './numpad.js';
+import numpad, { key_bs, key_clear } from './numpad.js';
 import {cn} from '../js/util.js';
 
 const fontSize = '40pt';
