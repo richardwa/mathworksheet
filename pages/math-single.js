@@ -37,62 +37,61 @@ const {classes} = createSheet({
       {'display': 'inline-block', 'width': '10ch', 'margin': '0 1ch 1ch 1ch'},
 });
 
-const truncate = (s, n) => s.substring(0, n);
-
-function getExpr(terms = []) {
-  return terms.map(({term, op}) => `${op} ${term}`).join(' ');
+const operations = {
+  '+': (a, b) => [a, '+', b, '=', a + b],
+  '-': (a, b) => {
+    const x = Math.max(a, b);
+    const y = Math.min(a, b);
+    return [x, '-', y, '=', x - y];
+  },
+  '*': (a, b) => [a, '*', b, '=', a * b],
+  '/': (a, b) => {
+    const x = a * b;
+    const y = a;
+    return [x, '÷', y, '=', x / y];
+  }
 };
 
-function isCorrect({answer, terms}) {
-  const expr = getExpr(terms);
-  const solution = eval(expr);
-  const correct = `${solution}` === `${answer}`;
+function isCorrect({answer, terms, op}) {
+  const expr = operations[op](...terms);
+  const correct = `${expr[4]}` === `${answer}`;
   return correct;
 }
 
-function generateTerms({operations, termLengths}) {
-  for (let i = 0; i < 10000; i++) {
-    const terms = termLengths.map(
-        size => ({term: rand(size), op: pickOne(...operations)}));
-
-    const expr = getExpr(terms);
-
-    if (eval(expr) > 0) {
-      return terms;
-    }
-  }
-  throw new Error('unable to generate terms with a positive solution');
-}
-
-function field({term, op = ''}) {
+function field(term, op = '') {
   return h('label', {class: [classes.label]},
-           `${op} ${term !== undefined?term.toLocaleString():''}`);
+           `${op} ${term?term.toLocaleString():''}`);
 }
 
-function createQuestion({terms, answer}) {
-  const fields = terms.map(field);
-  return h('div', {class: [classes.questionBox]}, ...fields, h('hr'),
-           field({term: answer ? parseInt(answer) : ''}));
+function createQuestion({terms, op, answer}) {
+  const expr = operations[op](...terms);
+  const firstField = field(expr[0]);
+  const secondField = field(expr[2], expr[1]);
+
+  return h('div', {class: [classes.questionBox]}, firstField, secondField,
+           h('hr'), field(parseInt(answer)));
 }
 
 function next(replace) {
   const state = getState();
-  setState({...state, answer: '', terms: generateTerms(state)},
-           replace === true);
+  const {operations, termLengths} = state;
+  const op = pickOne(...operations);
+  const terms = termLengths.map(rand);
+  setState({...state, answer: '', op, terms}, replace === true);
 }
 
 function nextButton() {
   const correct = isCorrect(getState());
-  const buttonProps = {
-    onclick: next,
-    class: cn({[classes.correct]: correct, [classes.button]: true})
-  };
-  return h('button', buttonProps, correct ? h('b', null, 'CORRECT!') : 'skip');
+  return h('button',
+           {
+             onclick: next,
+             class: cn({[classes.correct]: correct, [classes.button]: true})
+           },
+           correct ? h('b', null, 'CORRECT!') : 'skip', );
 }
 
 function onInput(key) {
   const state = getState();
-  const solution = eval(getExpr(state.terms));
   // use setState(..., true) here so that browser history doesnt grow from key
   // strokes
   if (key === key_clear) {
@@ -102,10 +101,11 @@ function onInput(key) {
         {...state, answer: state.answer.substring(0, state.answer.length - 1)},
         true);
   } else {
-    let answer = `${state.answer}${key}`;
-    answer = truncate(answer, `${solution}`.length + 1);
-    answer = `${parseInt(answer)}`;
-    setState({...state, answer}, true);
+    const {terms, op} = state;
+    const answer = operations[op](...terms)[4];
+    const maxLength = `${answer}`.length + 1;
+    setState( {...state, answer: `${state.answer}${key}`.substring(0, maxLength)},
+        true);
   }
 }
 
@@ -115,8 +115,8 @@ export default function render(props) {
   if (terms) {
     return h('div', {class: [classes.container]},
              h('div', {class: [classes.leftBox]}, nextButton(),
-               createQuestion(props)),
-             numpad({onInput}));
+               createQuestion(props), ),
+             numpad({onInput}), );
   } else {
     next(true);
     return null;
