@@ -44,11 +44,11 @@ const operations = {
     const y = Math.min(a, b);
     return [x, '-', y, '=', x - y];
   },
-  '*': (a, b) => [a, '*', b, '=', a * b],
+  '*': (a, b) => [a, '\u00D7', b, '=', a * b],
   '/': (a, b) => {
     const x = a * b;
     const y = a;
-    return [x, '÷', y, '=', x / y];
+    return [x, '\u00F7', y, '=', b];
   }
 };
 
