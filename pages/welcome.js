@@ -24,7 +24,11 @@ const page = () => h('div', {class: [classes.container]}, [
      li('line paper - numbers'), 
   ),
   h2('Online App'),
-  ul(li('Add/Subtract practice'))
+  ul(
+    li('Add/Subtract practice'),
+    li(h('a',{href:"/mathworksheet/#{%22page%22:%22./pages/math-single.js%22,%22navButton%22:%22App%22,%22operations%22:[%22*%22],%22termLengths%22:[1,1],%22answer%22:%22%22,%22op%22:%22*%22,%22terms%22:[8,6]}"},
+    'times practice'))
+    )
 ]);
 
 export default page;
