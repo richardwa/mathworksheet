@@ -1,6 +1,6 @@
 import {h, render, Component} from './lib/preact.js';
 import {getState, onStateChange} from './js/urlstate.js';
-import {navbar} from './pages/navbar.js';
+import {navbar} from './components/navbar.js';
 
 const defaultState = {
   page: './pages/welcome.js',

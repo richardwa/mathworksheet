@@ -1,13 +1,13 @@
-import {h} from '../lib/preact.js';
-import {createSheet} from '../js/jss.js';
+import { h } from '../lib/preact.js';
+import { createSheet } from '../js/jss.js';
 
-import {getState, setState} from '../js/urlstate.js';
-import {rand, pickOne} from '../js/random.js';
-import numpad, { key_bs, key_clear } from './numpad.js';
-import {cn} from '../js/util.js';
+import { getState, setState } from '../js/urlstate.js';
+import { rand, pickOne, seedRandom } from '../js/random.js';
+import numpad, { key_bs, key_clear } from '../components/numpad.js';
+import { cn } from '../js/util.js';
 
 const fontSize = '40pt';
-const {classes} = createSheet({
+const { classes } = createSheet({
   correct: {
     'color': 'green',
   },
@@ -34,7 +34,7 @@ const {classes} = createSheet({
     'margin-top': '1ch',
   },
   leftBox:
-      {'display': 'inline-block', 'width': '10ch', 'margin': '0 1ch 1ch 1ch'},
+    { 'display': 'inline-block', 'width': '10ch', 'margin': '0 1ch 1ch 1ch' },
 });
 
 const operations = {
@@ -52,42 +52,43 @@ const operations = {
   }
 };
 
-function isCorrect({answer, terms, op}) {
+function isCorrect({ answer, terms, op }) {
   const expr = operations[op](...terms);
   const correct = `${expr[4]}` === `${answer}`;
   return correct;
 }
 
 function field(term, op = '') {
-  return h('label', {class: [classes.label]},
-           `${op} ${term?term.toLocaleString():''}`);
+  return h('label', { class: [classes.label] },
+    `${op} ${term ? term.toLocaleString() : ''}`);
 }
 
-function createQuestion({terms, op, answer}) {
+function createQuestion({ terms, op, answer }) {
   const expr = operations[op](...terms);
   const firstField = field(expr[0]);
   const secondField = field(expr[2], expr[1]);
 
-  return h('div', {class: [classes.questionBox]}, firstField, secondField,
-           h('hr'), field(parseInt(answer)));
+  return h('div', { class: [classes.questionBox] }, firstField, secondField,
+    h('hr'), field(parseInt(answer)));
 }
 
 function next(replace) {
   const state = getState();
-  const {operations, termLengths} = state;
+  const { operations, termLengths } = state;
   const op = pickOne(...operations);
   const terms = termLengths.map(rand);
-  setState({...state, answer: '', op, terms}, replace === true);
+  const seed = Math.random();
+  setState({ ...state, answer: '', op, terms, seed }, replace === true);
 }
 
 function nextButton() {
   const correct = isCorrect(getState());
   return h('button',
-           {
-             onclick: next,
-             class: cn({[classes.correct]: correct, [classes.button]: true})
-           },
-           correct ? h('b', null, 'CORRECT!') : 'skip', );
+    {
+      onclick: next,
+      class: cn({ [classes.correct]: correct, [classes.button]: true })
+    },
+    correct ? h('b', null, 'CORRECT!') : 'skip');
 }
 
 function onInput(key) {
@@ -95,28 +96,29 @@ function onInput(key) {
   // use setState(..., true) here so that browser history doesnt grow from key
   // strokes
   if (key === key_clear) {
-    setState({...state, answer: ''}, true);
+    setState({ ...state, answer: '' }, true);
   } else if (key === key_bs) {
     setState(
-        {...state, answer: state.answer.substring(0, state.answer.length - 1)},
-        true);
+      { ...state, answer: state.answer.substring(0, state.answer.length - 1) },
+      true);
   } else {
-    const {terms, op} = state;
+    const { terms, op } = state;
     const answer = operations[op](...terms)[4];
     const maxLength = `${answer}`.length + 1;
-    setState( {...state, answer: `${state.answer}${key}`.substring(0, maxLength)},
-        true);
+    setState({ ...state, answer: `${state.answer}${key}`.substring(0, maxLength) },
+      true);
   }
 }
 
 export default function render(props) {
-  const {terms} = props;
+  const { terms , seed} = props;
+  seedRandom(seed);
   console.log(props);
   if (terms) {
-    return h('div', {class: [classes.container]},
-             h('div', {class: [classes.leftBox]}, nextButton(),
-               createQuestion(props), ),
-             numpad({onInput}), );
+    return h('div', { class: [classes.container] },
+      h('div', { class: [classes.leftBox] }, nextButton(),
+        createQuestion(props)),
+      numpad({ onInput }));
   } else {
     next(true);
     return null;

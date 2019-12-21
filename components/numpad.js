@@ -18,7 +18,7 @@ const {classes} = createSheet({
   },
 });
 
-function numpad({onInput}) {
+const numpad = ({onInput}) => {
   const cell = (content) =>
       h('button', {class: [classes.button], onclick: () => onInput(content)},
         content);
