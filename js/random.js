@@ -2,9 +2,10 @@ import { Alea } from '../lib/alea.js';
 
 let arng;
 export const seedRandom = (seed) => {
-  arng = new Alea(seed || Math.random());
+  arng = new Alea(seed);
 };
-seedRandom();
+
+seedRandom(Math.random());
 
 export const randRange = (min, max) => {
   return Math.floor(arng.next() * (max - min)) + min;

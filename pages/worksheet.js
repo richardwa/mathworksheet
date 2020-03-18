@@ -1,15 +1,18 @@
 import { h } from '../lib/preact.js';
 import { rand, pickOne, seedRandom } from '../js/random.js';
 import { createSheet } from '../js/jss.js';
+import { setState, updateState } from '../js/urlstate.js';
 
 const { classes } = createSheet({
   container: {
     'font-size': '20pt',
     'font-family': 'monospace',
+    'display': 'grid',
+    'grid-template-columns': 'auto auto'
   },
   block: {
     'display': 'block',
-    'margin': '1ch',
+    'margin': '2ch 1ch',
   },
   field: {
     'padding': '0 1ch',
@@ -42,13 +45,25 @@ function question(num, operations, ...rest) {
   }
   expr.pop();
   plainExpr.pop();
-  return span(null, questionNumber(num), ...expr, h('b',{ title: eval(plainExpr.join('')) }, '='));
+  return span(null, questionNumber(num), ...expr, h('b', { title: eval(plainExpr.join('')) }, '='));
+}
+
+function pageNav(seed) {
+  return h('center', null,
+    h('button', { onClick: () => updateState({ seed: seed - 1 }) }, '<'),
+    h('span', null, ` ${seed} `),
+    h('button', { onClick: () => updateState({ seed: seed + 1 }) }, '>'),
+  );
+
 }
 
 export default function render(state) {
   const { operations, termLengths, seed } = state;
   seedRandom(seed);
   const createQuestion = (x, i) => question(i, operations, ...termLengths);
-  return div({ class: classes.container },
-    Array.from({ length: 20 }, createQuestion));
+  return h('div', null,
+    pageNav(seed),
+    div({ class: classes.container },
+      Array.from({ length: 20 }, createQuestion))
+  );
 }

@@ -41,7 +41,7 @@ const Link = (name, page, settings) => {
   }
   return h('button',
     {
-      onclick: () => setState({ page, navButton: name, ...settings, seed: Math.random() }),
+      onclick: () => setState({ page, navButton: name, ...settings, seed: Math.floor(Math.random() * 1000) }),
       class: css.join(' ')
     },
     name);

@@ -1,6 +1,6 @@
-import {h, render, Component} from './lib/preact.js';
-import {getState, onStateChange} from './js/urlstate.js';
-import {navbar} from './components/navbar.js';
+import { h, render, Component } from './lib/preact.js';
+import { getState, onStateChange } from './js/urlstate.js';
+import { navbar } from './components/navbar.js';
 
 const defaultState = {
   page: './pages/welcome.js',
@@ -27,7 +27,7 @@ class Main extends Component {
   fetchPage(page) {
     if (page && !this.componentCache.has(page)) {
       console.log('fetching', page);
-      import(page) .then((mod) => {
+      import(page).then((mod) => {
         this.componentCache.set(page, mod.default);
         this.forceUpdate();
       });
@@ -36,9 +36,9 @@ class Main extends Component {
 
   render() {
     const state = getState(defaultState);
-    const {page, ...rest} = state;
+    const { page, ...rest } = state;
     const component = this.componentCache.get(page);
-    console.log('rendering', component !== undefined, state);
+    console.log('rendering', page, state);
     const content = component ? h(component, rest) : null;
     // console.log(content);
 
