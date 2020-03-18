@@ -61,9 +61,18 @@ export default function render(state) {
   const { operations, termLengths, seed } = state;
   seedRandom(seed);
   const createQuestion = (x, i) => question(i, operations, ...termLengths);
+  const questions = Array.from({ length: 20 }, createQuestion);
+
+  // conveniet get answers function
+  window.getAnswers = () => questions.reduce((a, v, i) => {
+    const ans = v.children[4].attributes.title;
+    a[i + 1] = ans;
+    return a;
+  }, {});
+
   return h('div', null,
     pageNav(seed),
     div({ class: classes.container },
-      Array.from({ length: 20 }, createQuestion))
+      questions)
   );
 }
