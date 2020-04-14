@@ -7,7 +7,7 @@
             "label": "server",
             "type": "shell",
             "isBackground": true,
-            "command": "python -m SimpleHTTPServer 8080",
+            "command": "python -m http.server 8080",
             "problemMatcher": [
                 {
                   "pattern": [

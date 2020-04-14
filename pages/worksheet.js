@@ -45,7 +45,8 @@ function question(num, operations, ...rest) {
   }
   expr.pop();
   plainExpr.pop();
-  return span(null, questionNumber(num), ...expr, h('b', { title: eval(plainExpr.join('')) }, '='));
+  const ans = eval(plainExpr.join(''));
+  return span({ans}, questionNumber(num), ...expr, h('b', { title:  ans}, '='));
 }
 
 function pageNav(seed) {
@@ -60,12 +61,11 @@ function pageNav(seed) {
 export default function render(state) {
   const { operations, termLengths, seed } = state;
   seedRandom(seed);
-  const createQuestion = (x, i) => question(i, operations, ...termLengths);
-  const questions = Array.from({ length: 20 }, createQuestion);
+  const questions = Array.from({ length: 20 }, (x, i) => question(i, operations, ...termLengths));
 
   // conveniet get answers function
   window.getAnswers = () => questions.reduce((a, v, i) => {
-    const ans = v.children[4].attributes.title;
+    const ans = v.attributes.ans;
     a[i + 1] = ans;
     return a;
   }, {});
