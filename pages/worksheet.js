@@ -6,7 +6,6 @@ import { setState, updateState } from '../js/urlstate.js';
 const { classes } = createSheet({
   container: {
     'font-size': '20pt',
-    'font-family': 'Consolas, monospace',
     'display': 'grid',
     'grid-template-columns': 'auto auto'
   },
