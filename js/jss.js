@@ -1,5 +1,18 @@
+// @ts-check
+
+/**
+ * @typedef {Object} Style
+ * @property {string} url
+ * @property {string} repository_url
+ * @property {id} number
+ * @property {string} title
+ * @property {string} state
+ * @property {bool} open
+ */
+
 
 let count = 10000;
+
 export function createSheet(styles, attrs) {
   let sheet = document.createElement('style');
   if (attrs) {
