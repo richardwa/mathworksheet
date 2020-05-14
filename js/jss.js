@@ -1,18 +1,21 @@
 // @ts-check
 
 /**
- * @typedef {Object} Style
- * @property {string} url
- * @property {string} repository_url
- * @property {id} number
- * @property {string} title
- * @property {string} state
- * @property {bool} open
+ * @typedef {Object} Style 
+ * 
+ * 
+ * 
+ * @typedef {Object} Attrs
  */
 
 
 let count = 10000;
 
+/**
+ * 
+ * @param {Map<string,Style>} styles 
+ * @param {Map<string,Attrs>} attrs 
+ */
 export function createSheet(styles, attrs) {
   let sheet = document.createElement('style');
   if (attrs) {
@@ -41,5 +44,5 @@ export function createSheet(styles, attrs) {
   }
   sheet.innerHTML = rules.join('\n');
   document.head.appendChild(sheet);
-  return {classes};
+  return { classes };
 }
