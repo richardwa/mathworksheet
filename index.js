@@ -1,6 +1,7 @@
-import { h, render, Component } from './lib/preact.js';
+import { h, render, Component } from './lib/index.js';
 import { getState, onStateChange } from './js/urlstate.js';
 import { navbar } from './components/navbar.js';
+
 
 const defaultState = {
   page: './pages/welcome.js',
@@ -39,10 +40,13 @@ class Main extends Component {
     const { page, ...rest } = state;
     const component = this.componentCache.get(page);
     console.log('rendering', page, state);
-    const content = component ? h(component, rest) : null;
-    // console.log(content);
 
-    return h('div', null, h(navbar, state), content);
+    return h`
+      <div>
+        <${navbar}/>
+        ${component && h`<${component} ...${rest}/>`}
+      </div>
+    `;
   }
 }
-render(h(Main), document.body);
+render(h`<${Main}/>`, document.body);

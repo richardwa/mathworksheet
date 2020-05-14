@@ -1,3 +1,5 @@
+// @ts-check
+
 import { h } from '../lib/preact.js';
 import { rand, pickOne, seedRandom } from '../js/random.js';
 import { createSheet } from '../js/jss.js';
@@ -45,7 +47,7 @@ function question(num, operations, ...rest) {
   expr.pop();
   plainExpr.pop();
   const ans = eval(plainExpr.join(''));
-  return span({ans}, questionNumber(num), ...expr, h('b', { title:  ans}, '='));
+  return span({ ans }, questionNumber(num), ...expr, h('b', { title: ans }, '='));
 }
 
 function pageNav(seed) {
@@ -63,6 +65,7 @@ export default function render(state) {
   const questions = Array.from({ length: 20 }, (x, i) => question(i, operations, ...termLengths));
 
   // conveniet get answers function
+  // @ts-ignore
   window.getAnswers = () => questions.reduce((a, v, i) => {
     const ans = v.attributes.ans;
     a[i + 1] = ans;
