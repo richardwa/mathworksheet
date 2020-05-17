@@ -1,0 +1,23 @@
+{
+  "name": "mathworksheet",
+  "version": "1.0.0",
+  "description": "Math worksheet generator https://richardwa.github.io/mathworksheet/",
+  "main": "index.html",
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "parcel build app/index.html --out-dir dist",
+    "serve": "parcel app/index.html --out-dir target"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4",
+    "rimraf": "^3.0.2",
+    "typescript": "^3.9.2"
+  },
+  "dependencies": {
+    "alea": "^1.0.0",
+    "jquery": "^3.5.1",
+    "jss": "^10.1.1",
+    "preact": "^10.4.1",
+    "preact-router": "^3.2.1"
+  }
+}

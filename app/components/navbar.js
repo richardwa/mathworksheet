@@ -1,9 +1,10 @@
-import { h } from '../lib/preact.js';
-import { setState, getState } from '../js/urlstate.js';
-import { createSheet } from '../js/jss.js';
+import { h } from 'preact';
+import { setState, getState } from '../utils/urlstate';
+import jss from 'jss';
 
 const fontSize = '14pt';
-const { classes } = createSheet({
+
+const { classes: css } = jss.createStyleSheet({
   navbar: {
     'margin-bottom': '20px',
     'font-size': fontSize,
@@ -18,10 +19,11 @@ const { classes } = createSheet({
     'font-size': fontSize,
     'margin': '2px',
   }
-});
+}).attach();
 
-const print =
-  createSheet({ noPrint: { 'display': 'none !important' } }, { media: 'print' });
+const { classes: print } = jss.createStyleSheet({
+  noPrint: { 'display': 'none !important' }
+}, { media: 'print' }).attach();
 
 const settings = {
   operations: ['+', '-'],
@@ -35,14 +37,14 @@ const numbers = Array.from({ length: 26 }, (x, i) => `${i % 10}`);
 
 const Link = (name, page, settings) => {
   const state = getState();
-  const css = [classes.button];
+  const classes = [css.button];
   if (state.navButton === name) {
-    css.push(classes.current);
+    classes.push(css.current);
   }
   return h('button',
     {
       onclick: () => setState({ page, navButton: name, ...settings, seed: Math.floor(Math.random() * 1000) }),
-      class: css.join(' ')
+      class: classes.join(' ')
     },
     name);
 };
@@ -60,7 +62,7 @@ const App = () => Link('App', './pages/math-single.js', settings);
 
 
 
-export const navbar = () =>
-  h('div', { class: [classes.navbar, print.classes.noPrint].join(' ') }, Home(),
+export const Navbar = () =>
+  h('div', { class: [css.navbar, print.noPrint].join(' ') }, Home(),
     Sep, 'Writing sheets: ', PrintNumber(), PrintAlpha(), PrintAlphaCaps(),
     Sep, 'Math: ', App(), PrintAdd());

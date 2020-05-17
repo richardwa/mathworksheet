@@ -1,4 +1,4 @@
-import { Alea } from '../lib/alea.js';
+import { Alea } from 'alea';
 
 let arng;
 export const seedRandom = (seed) => {

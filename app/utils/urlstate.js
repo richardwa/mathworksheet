@@ -1,4 +1,17 @@
 
+/**
+ * @typedef {Object} State
+ * @property {}
+ * 
+ * 
+ * 
+ */
+
+
+/** 
+ * @param {string} url 
+ * @returns {State}
+ */
 const parseStateFromURL = (url) => {
   try {
     let json;
@@ -47,7 +60,7 @@ export const updateState = (s) => {
     }
   }
   if (hasChanges) {
-    setState({...state, ...s});
+    setState({ ...state, ...s });
   }
 };
 
