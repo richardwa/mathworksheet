@@ -7,7 +7,8 @@
     "prebuild": "rimraf dist",
     "build": "parcel build app/index.html --out-dir docs",
     "preserve": "rimraf target",
-    "serve": "parcel app/index.html --out-dir target --port 8000"
+    "serve": "parcel app/index.html --out-dir target --port 8000",
+    "check": "tsc"
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.4",

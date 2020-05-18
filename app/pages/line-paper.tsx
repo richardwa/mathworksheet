@@ -1,5 +1,6 @@
-import { h, FunctionalComponent } from 'preact';
+import { h, FunctionalComponent, Component } from 'preact';
 import jss from 'jss';
+import { registerComponent, unregisterComponent } from '../utils/urlstate';
 
 const size = '30pt';
 const { classes } = jss.createStyleSheet({
@@ -40,6 +41,26 @@ const modes = {
   caps: blankArray.map((x, i) => String.fromCharCode(i + ('A'.charCodeAt(0)))),
   num: blankArray.map((x, i) => `${i % 10}`)
 }
+type State = {
+  mode: keyof typeof modes;
+}
 
-export const LinePaper: FunctionalComponent<{ mode: keyof typeof modes }> = ({ mode }) =>
-  <div class={classes.container} >{...modes[mode].map(line)}</div>;
+export class LinePaper extends Component<{}, State>{
+  constructor() {
+    super();
+    this.state = {
+      mode: "alpha"
+    }
+  }
+  componentDidMount() {
+    registerComponent('line', this);
+  }
+
+  componentWillUnmount() {
+    unregisterComponent('line');
+  }
+  render() {
+    const { mode } = this.state;
+    return < div class={classes.container} >{...modes[mode].map(line)}</div>
+  }
+}

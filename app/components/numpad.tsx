@@ -25,7 +25,7 @@ type Props = {
 export const Numpad = ({ onInput }: Props) => {
 
   const Cell = ({ c }: { c: string }) =>
-    <button class={classes.button} onclick={() => onInput(c)}>
+    <button class={classes.button} onClick={() => onInput(c)}>
       {c}
     </button>;
 
