@@ -50,7 +50,7 @@ const Question = ({ num, operations, termLengths }: QuestionProps) => {
   const ans = eval(plainExpr.join(''));
 
   return (
-    <span title={ans} class={classes.block}>
+    <span title={ans} class={[classes.block, 'question'].join(' ')}>
       <i class={classes.questionNumber}>{(num + 1).toString().padStart(2, '0')})</i>
       {...expr}
       <b>=</b>
@@ -65,12 +65,14 @@ type State = {
   seed: number
 }
 
+
+
 export class Worksheet extends Component<{}, State> {
   constructor() {
     super();
     this.state = {
-      operations: ['+'],
-      termLengths: [4, 4],
+      operations: ['+', '-'],
+      termLengths: [2, 2, 2, 1],
       seed: 1
     }
   }
@@ -98,14 +100,6 @@ export class Worksheet extends Component<{}, State> {
     const questions = Array.from({ length: 20 },
       (x, i) => <Question num={i} operations={operations} termLengths={termLengths} />);
 
-    // conveniet get answers function
-    // @ts-ignore
-    window.getAnswers = () => questions.reduce((a, v, i) => {
-      const ans = v.attributes.title;
-      a[i + 1] = ans;
-      return a;
-    }, {});
-
     return [
       <div class={classes.center}>
         <button onClick={this.prev}>&lt;</button>
@@ -118,4 +112,14 @@ export class Worksheet extends Component<{}, State> {
     ];
 
   }
+}
+
+// conveniet get answers function
+// @ts-ignore
+window.getAnswers = () => {
+  // @ts-ignore
+  document.querySelectorAll(".question").forEach((v, i) => {
+    // @ts-ignore
+    console.log(i + 1, v.attributes.title.value);
+  })
 }
