@@ -2,6 +2,7 @@ import { h, render, Component } from 'preact';
 import { registerComponent, unregisterComponent } from './utils/urlstate';
 import { Navbar, Link } from './components/navbar';
 import { Welcome } from './pages/welcome';
+import { Worksheet } from './pages/worksheet';
 
 enum Pages {
   home = 'h',
@@ -43,7 +44,7 @@ export class Main extends Component<{}, { page: Pages }> {
       case Pages.home:
         return <Welcome main={this} />;
       case Pages.worksheet:
-        return <div>worksheet</div>;
+        return <Worksheet />;
       case Pages.app:
         return <div>app</div>;
       default:

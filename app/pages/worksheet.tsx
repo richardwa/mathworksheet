@@ -1,9 +1,8 @@
-// @ts-check
 
-import { h } from 'preact';
+import { h, Component } from 'preact';
 import { rand, pickOne, seedRandom } from '../utils/random';
+import { registerComponent, unregisterComponent } from '../utils/urlstate';
 import jss from 'jss';
-import { setState, updateState } from '../utils/urlstate';
 
 const { classes } = jss.createStyleSheet({
   container: {
@@ -18,63 +17,105 @@ const { classes } = jss.createStyleSheet({
   field: {
     'padding': '0 1ch',
   },
+  center: {
+    'text-align': 'center',
+  },
   questionNumber: {
     'font-size': '12pt',
     'color': 'gray',
   }
 }).attach();
 
-const div = (attr, ...args) => h('div', attr, ...args);
-const span = (attr, ...args) =>
-  h('span', { ...attr, class: classes.block }, ...args);
-const field = (num) =>
-  h('label', { class: [classes.field] }, num.toLocaleString());
-const questionNumber = (i) => h('i', { class: [classes.questionNumber] },
-  (i + 1).toString().padStart(2, '0') + ')');
 
+const Field = ({ num }) => <label class={classes.field}>{num.toLocaleString()}</label>;
 
-function question(num, operations, ...rest) {
+type QuestionProps = {
+  num: number,
+  operations: Array<'+' | '-'>,
+  termLengths: number[]
+}
+const Question = ({ num, operations, termLengths }: QuestionProps) => {
   const op = pickOne(...operations);
-  const terms = rest.map((size, i) => rand(size));
+  const terms = termLengths.map((size, i) => rand(size));
   const expr = [];
   const plainExpr = [];
   for (let i in terms) {
     plainExpr.push(terms[i])
-    expr.push(field(terms[i]));
+    expr.push(<Field num={terms[i]} />);
     plainExpr.push(`${op}`);
     expr.push(`${op}`);
   }
   expr.pop();
   plainExpr.pop();
   const ans = eval(plainExpr.join(''));
-  return span({ ans }, questionNumber(num), ...expr, h('b', { title: ans }, '='));
+
+  return (
+    <span title={ans} class={classes.block}>
+      <i class={classes.questionNumber}>{(num + 1).toString().padStart(2, '0')})</i>
+      {...expr}
+      <b>=</b>
+    </span>
+  );
 }
 
-function pageNav(seed) {
-  return h('center', null,
-    h('button', { onClick: () => updateState({ seed: seed - 1 }) }, '<'),
-    h('span', null, ` ${seed} `),
-    h('button', { onClick: () => updateState({ seed: seed + 1 }) }, '>'),
-  );
 
+type State = {
+  operations: Array<'+' | '-'>,
+  termLengths: number[],
+  seed: number
 }
 
-export default function render(state) {
-  const { operations, termLengths, seed } = state;
-  seedRandom(seed);
-  const questions = Array.from({ length: 20 }, (x, i) => question(i, operations, ...termLengths));
+export class Worksheet extends Component<{}, State> {
+  constructor() {
+    super();
+    this.state = {
+      operations: ['+'],
+      termLengths: [4, 4],
+      seed: 1
+    }
+  }
+  componentDidMount() {
+    registerComponent('ws', this);
+  }
 
-  // conveniet get answers function
-  // @ts-ignore
-  window.getAnswers = () => questions.reduce((a, v, i) => {
-    const ans = v.attributes.ans;
-    a[i + 1] = ans;
-    return a;
-  }, {});
+  componentWillUnmount() {
+    unregisterComponent('ws');
+  }
 
-  return h('div', null,
-    pageNav(seed),
-    div({ class: classes.container },
-      questions)
-  );
+  next = () => {
+    const { seed } = this.state;
+    this.setState({ seed: seed + 1 });
+  }
+
+  prev = () => {
+    const { seed } = this.state;
+    this.setState({ seed: seed - 1 });
+  }
+
+  render() {
+    const { operations, termLengths, seed } = this.state;
+    seedRandom(seed);
+    const questions = Array.from({ length: 20 },
+      (x, i) => <Question num={i} operations={operations} termLengths={termLengths} />);
+
+    // conveniet get answers function
+    // @ts-ignore
+    window.getAnswers = () => questions.reduce((a, v, i) => {
+      const ans = v.attributes.title;
+      a[i + 1] = ans;
+      return a;
+    }, {});
+
+    return [
+      <div class={classes.center}>
+        <button onClick={this.prev}>&lt;</button>
+        <span> {seed} </span>
+        <button onClick={this.next}>&gt;</button>
+      </div>,
+      <div class={classes.container}>
+        {questions}
+      </div>
+    ];
+
+  }
 }

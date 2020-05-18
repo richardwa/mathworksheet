@@ -1,22 +1,20 @@
-import { Alea } from 'alea';
+import Alea from 'alea';
 
-let arng;
-export const seedRandom = (seed) => {
-  arng = new Alea(seed);
+let arng = Alea(Math.random());
+export const seedRandom = (seed: number) => {
+  arng = Alea(seed);
 };
 
-seedRandom(Math.random());
-
-export const randRange = (min, max) => {
-  return Math.floor(arng.next() * (max - min)) + min;
+export const randRange = (min: number, max: number) => {
+  return Math.floor(arng() * (max - min)) + min;
 };
 
-export const rand = (size) => {
+export const rand = (size: number) => {
   const min = Math.pow(10, size - 1);
   const max = Math.pow(10, size);
   return randRange(min, max);
 };
 
-export const pickOne = (...op) => {
-  return op[Math.floor(arng.next() * op.length)];
+export const pickOne = (...op: any[]) => {
+  return op[Math.floor(arng() * op.length)];
 };
