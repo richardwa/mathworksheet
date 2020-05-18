@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import jss from 'jss';
 
-import { registerComponent, unregisterComponent } from '../utils/urlstate';
+import { registerComponent, unregisterComponent, nextHistoryWillReplace } from '../utils/urlstate';
 import { rand, pickOne, seedRandom } from '../utils/random';
 import { Numpad, key_bs, key_clear } from '../components/numpad';
 
@@ -51,8 +51,8 @@ const operations = {
 
 type State = {
   operation: Array<keyof typeof operations>,
-  aLen: number,
-  bLen: number,
+  len1: number,
+  len2: number,
   input: string,
   seed: number
 }
@@ -63,8 +63,8 @@ export class MathApp extends Component<{}, State>{
     super();
     this.state = {
       operation: ['+'],
-      aLen: 4,
-      bLen: 4,
+      len1: 4,
+      len2: 4,
       input: "",
       seed: 1
     }
@@ -80,16 +80,17 @@ export class MathApp extends Component<{}, State>{
 
   next = () => {
     const { seed } = this.state;
-    this.setState({ seed: seed + 1 });
+    this.setState({ seed: seed + 1, input: "" });
   }
 
   prev = () => {
     const { seed } = this.state;
-    this.setState({ seed: seed - 1 });
+    this.setState({ seed: seed - 1, input: "" });
   }
 
   onInput = (key: string) => {
     const { input } = this.state;
+    
     if (key === key_clear) {
       this.setState({ input: '' });
     } else if (key === key_bs) {
@@ -97,6 +98,7 @@ export class MathApp extends Component<{}, State>{
     } else {
       this.setState({ input: `${input}${key}`.substring(0, this.answerLength || 10) });
     }
+    nextHistoryWillReplace();
   }
 
   renderNextButton(correct: boolean) {
@@ -124,10 +126,10 @@ export class MathApp extends Component<{}, State>{
   }
 
   render() {
-    const { seed, operation, aLen, bLen, input } = this.state;
+    const { seed, operation, len1, len2, input } = this.state;
     seedRandom(seed);
     const op = pickOne(...operation);
-    const expr = operations[op](rand(aLen), rand(bLen));
+    const expr = operations[op](rand(len1), rand(len2));
     this.answerLength = `${expr.answer}`.length;
 
     return (

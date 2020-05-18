@@ -1,5 +1,8 @@
 import { Component } from "preact";
 
+let historySkip: number = 0;
+export const nextHistoryWillReplace = () => historySkip++;
+
 const defaultEquals = (a, b) => {
   if (a === b) {
     return true;
@@ -32,12 +35,13 @@ const urlState = (() => {
     }
   };
 
-  const setStateIntoURL = (s: StateMap, withHistory: boolean = true) => {
+  const setStateIntoURL = (s: StateMap) => {
     const url = `${document.location.pathname}#${JSON.stringify(s)}`;
-    if (withHistory) {
-      history.pushState(null, null, url);
-    } else {
+    if (historySkip > 0) {
+      historySkip--;
       history.replaceState(null, null, url);
+    } else {
+      history.pushState(null, null, url);
     }
   };
 
@@ -64,11 +68,11 @@ const urlState = (() => {
     },
     remove: (instanceId: string) => {
       delete state[instanceId];
-      setStateIntoURL(state, false);
+      setStateIntoURL(state);
+      nextHistoryWillReplace();
     }
   }
 })();
-
 
 export const registerComponent = (instanceId: string, component: Component) => {
   const originalSetState = component.setState;
