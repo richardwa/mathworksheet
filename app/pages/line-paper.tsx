@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, FunctionalComponent } from 'preact';
 import jss from 'jss';
 
 const size = '32pt';
@@ -17,7 +17,7 @@ const { classes } = jss.createStyleSheet({
   },
   text: {
     'font-weight': 'normal',
-    'margin-top': '-1.5rem',
+    'margin-top': '-1.15rem',
     'position': 'absolute',
   },
   centerline: {
@@ -26,14 +26,19 @@ const { classes } = jss.createStyleSheet({
   }
 }).attach();
 
-function h_line(ch) {
-  return h('label', { class: [classes.label] },
-    h('div', { class: [classes.centerline] }),
-    h('b', { class: classes.text }, ch));
+const line = (ch: string) =>
+  <label class={classes.label} >
+    <div class={classes.centerline} />
+    <b class={classes.text}>{ch}</b>
+  </label>;
+
+const blankArray = Object.freeze(Array.from({ length: 26 }));
+const modes = {
+  blank: blankArray.map((x, i) => ''),
+  alpha: blankArray.map((x, i) => String.fromCharCode(i + ('a'.charCodeAt(0)))),
+  caps: blankArray.map((x, i) => String.fromCharCode(i + ('A'.charCodeAt(0)))),
+  num: blankArray.map((x, i) => `${i % 10}`)
 }
 
-function render({ lines }) {
-  return h('div', { class: [classes.container] }, ...lines.map(h_line));
-}
-
-export default render;
+export const LinePaper: FunctionalComponent<{ mode: keyof typeof modes }> = ({ mode }) =>
+  <div class={classes.container} >{...modes[mode].map(line)}</div>;

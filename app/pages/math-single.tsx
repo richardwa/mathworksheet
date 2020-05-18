@@ -90,7 +90,7 @@ export class MathApp extends Component<{}, State>{
 
   onInput = (key: string) => {
     const { input } = this.state;
-    
+
     if (key === key_clear) {
       this.setState({ input: '' });
     } else if (key === key_bs) {
@@ -141,7 +141,7 @@ export class MathApp extends Component<{}, State>{
         </div>
         <div class={classes.leftBox}>
           {this.renderNextButton(expr.answer === parseInt(input))}
-          {this.renderQuestion({ symbol: expr.symbol, term1: expr.term1, term2: expr.term2, input)}
+          {this.renderQuestion({ symbol: expr.symbol, term1: expr.term1, term2: expr.term2, input })}
         </div>
         <Numpad onInput={this.onInput} />
       </div>

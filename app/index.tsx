@@ -4,11 +4,15 @@ import { Navbar, Link } from './components/navbar';
 import { Welcome } from './pages/welcome';
 import { Worksheet } from './pages/worksheet';
 import { MathApp } from './pages/math-single';
+import { LinePaper } from './pages/line-paper';
+import { EarTraining } from './pages/ear-training';
 
 enum Pages {
   home = 'h',
   worksheet = 'ws',
-  app = 'app'
+  app = 'app',
+  lines = 'line',
+  ear = 'ear'
 }
 
 export class Main extends Component<{}, { page: Pages }> {
@@ -38,6 +42,12 @@ export class Main extends Component<{}, { page: Pages }> {
   setApp = () => {
     this.setState({ page: Pages.app });
   }
+  setLine = () => {
+    this.setState({ page: Pages.lines });
+  }
+  setEar = () => {
+    this.setState({ page: Pages.ear });
+  }
 
   renderPage() {
     const { page } = this.state;
@@ -48,6 +58,10 @@ export class Main extends Component<{}, { page: Pages }> {
         return <Worksheet />;
       case Pages.app:
         return <MathApp />;
+      case Pages.ear:
+        return <EarTraining />;
+      case Pages.lines:
+        return <LinePaper mode="alpha" />;
       default:
         return <div>page not found</div>
     }
@@ -60,6 +74,8 @@ export class Main extends Component<{}, { page: Pages }> {
           <Link current={page === Pages.home} onclick={this.setHome}>Home</Link>
           <Link current={page === Pages.worksheet} onclick={this.setWorksheet}>Worksheet</Link>
           <Link current={page === Pages.app} onclick={this.setApp}>App</Link>
+          <Link current={page === Pages.lines} onclick={this.setLine}>Line Paper</Link>
+          <Link current={page === Pages.ear} onclick={this.setEar}>Ear Training</Link>
         </Navbar>
         {this.renderPage()}
       </div>

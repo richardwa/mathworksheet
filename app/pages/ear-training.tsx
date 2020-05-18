@@ -1,27 +1,71 @@
-import {synth} from '../utils/synth';
-import {h} from 'preact';
-import {randRange} from '../utils/random';
 
+import { h, Component } from 'preact';
+import { synth } from '../utils/synth';
+import { randRange, seedRandom } from '../utils/random';
+import { registerComponent, unregisterComponent } from '../utils/urlstate';
 
-let counter = 0;
-const play = (note, duration) => {
-  const id = counter;
-  counter++;
-  synth.noteOn(id, note, 80);
-  setTimeout(() => { synth.noteOff(id); }, duration);
-};
-
-const playInterval = (start, steps) => {
-  play(start, 3000);
-  setTimeout(() => { play(start + steps, 2000); }, 1000)
-};
-
-const onclick = () => {
-  const interval = randRange(0, 12) + 1;
-  const baseNote = randRange(40, 80 - interval) + 1;
-  playInterval(baseNote, interval);
-};
-
-export default function render(props) {
-  return h('div', null, h('button', {onclick}, 'Play'));
+type Interval = {
+  base: number,
+  steps: number
 }
+const play = ({ base, steps }: Interval) => {
+  const volume = 80;
+  synth.noteOn("base", base, volume, 3000);
+  setTimeout(() => {
+    synth.noteOn("top", base + steps, volume, 2000);
+  }, 1000)
+};
+
+const generate = (seed: number): Interval => {
+  seedRandom(seed);
+  const steps = randRange(0, 12) + 1;
+  const base = randRange(40, 80 - steps) + 1;
+  return { base, steps };
+}
+
+type State = {
+  seed: number
+}
+export class EarTraining extends Component<{}, State>{
+  constructor() {
+    super();
+    this.state = {
+      seed: 1
+    }
+  }
+  componentDidMount() {
+    registerComponent('ear', this);
+  }
+
+  componentWillUnmount() {
+    unregisterComponent('ear');
+  }
+
+  next = () => {
+    const { seed } = this.state;
+    this.setState({ seed: seed + 1 });
+  }
+
+  prev = () => {
+    const { seed } = this.state;
+    this.setState({ seed: seed - 1 });
+  }
+
+  onclick = () => {
+    const { seed } = this.state;
+    const interval = generate(seed);
+    play(interval);
+  }
+
+  render() {
+    const { seed } = this.state;
+    const interval = generate(seed);
+    return (
+      <div>
+        <button onClick={this.prev}>&lt;</button>
+        <button onClick={this.onclick}>Play {seed}</button>
+        <button onClick={this.next}>&gt;</button>
+      </div>
+    );
+  }
+} 

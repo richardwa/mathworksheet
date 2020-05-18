@@ -1,6 +1,7 @@
 import Alea from 'alea';
 
 let arng = Alea(Math.random());
+
 export const seedRandom = (seed: number) => {
   arng = Alea(seed);
 };
