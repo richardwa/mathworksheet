@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "target": "es6",
+    "module": "es6",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "removeComments": false,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "jsx": "react",
+    "jsxFactory": "h",
+    "noEmit": true,
+    "lib": [
+      "ES2017",
+      "DOM"
+    ]
+  },
+  "files": [
+    "./app/index.tsx"
+  ]
+}
