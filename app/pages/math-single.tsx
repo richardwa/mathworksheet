@@ -1,10 +1,9 @@
-import { h } from 'preact';
+import { h, Component } from 'preact';
 import jss from 'jss';
 
-import { getState, setState } from '../utils/urlstate';
+import { registerComponent, unregisterComponent } from '../utils/urlstate';
 import { rand, pickOne, seedRandom } from '../utils/random';
-import numpad, { key_bs, key_clear } from '../components/numpad';
-import { cn } from '../utils/util';
+import { Numpad, key_bs, key_clear } from '../components/numpad';
 
 const fontSize = '40pt';
 const { classes } = jss.createStyleSheet({
@@ -37,90 +36,113 @@ const { classes } = jss.createStyleSheet({
     { 'display': 'inline-block', 'width': '10ch', 'margin': '0 1ch 1ch 1ch' },
 }).attach();
 
+type OpReturn = {
+  symbol: string,
+  term1: number,
+  term2: number,
+  answer: number
+};
 const operations = {
-  '+': (a, b) => [a, '+', b, '=', a + b],
-  '-': (a, b) => {
-    const x = Math.max(a, b);
-    const y = Math.min(a, b);
-    return [x, '-', y, '=', x - y];
-  },
-  '*': (a, b) => [a, '\u00D7', b, '=', a * b],
-  '/': (a, b) => {
-    const x = a * b;
-    const y = a;
-    return [x, '\u00F7', y, '=', b];
-  }
+  '+': (a: number, b: number): OpReturn => ({ symbol: '+', term1: a, term2: b, answer: a + b }),
+  '-': (a: number, b: number): OpReturn => ({ symbol: '-', term1: a, term2: b, answer: a + b }),
+  '*': (a: number, b: number): OpReturn => ({ symbol: '\u00D7', term1: a, term2: b, answer: a * b }),
+  '/': (a: number, b: number): OpReturn => ({ symbol: '\u00F7', term1: a * b, term2: b, answer: b })
 };
 
-function isCorrect({ answer, terms, op }) {
-  const expr = operations[op](...terms);
-  const correct = `${expr[4]}` === `${answer}`;
-  return correct;
+type State = {
+  operation: Array<keyof typeof operations>,
+  aLen: number,
+  bLen: number,
+  input: string,
+  seed: number
 }
 
-function field(term, op = '') {
-  return h('label', { class: [classes.label] },
-    `${op} ${term ? term.toLocaleString() : ''}`);
-}
-
-function createQuestion({ terms, op, answer }) {
-  const expr = operations[op](...terms);
-  const firstField = field(expr[0]);
-  const secondField = field(expr[2], expr[1]);
-
-  return h('div', { class: [classes.questionBox] }, firstField, secondField,
-    h('hr'), field(parseInt(answer)));
-}
-
-function next(replace) {
-  const state = getState();
-  const { operations, termLengths } = state;
-  const op = pickOne(...operations);
-  const terms = termLengths.map(rand);
-  const seed = Math.random();
-  setState({ ...state, answer: '', op, terms, seed }, replace === true);
-}
-
-function nextButton() {
-  const correct = isCorrect(getState());
-  return h('button',
-    {
-      onclick: next,
-      class: cn({ [classes.correct]: correct, [classes.button]: true })
-    },
-    correct ? h('b', null, 'CORRECT!') : 'skip');
-}
-
-function onInput(key) {
-  const state = getState();
-  // use setState(..., true) here so that browser history doesnt grow from key
-  // strokes
-  if (key === key_clear) {
-    setState({ ...state, answer: '' }, true);
-  } else if (key === key_bs) {
-    setState(
-      { ...state, answer: state.answer.substring(0, state.answer.length - 1) },
-      true);
-  } else {
-    const { terms, op } = state;
-    const answer = operations[op](...terms)[4];
-    const maxLength = `${answer}`.length + 1;
-    setState({ ...state, answer: `${state.answer}${key}`.substring(0, maxLength) },
-      true);
+export class MathApp extends Component<{}, State>{
+  answerLength?: number;
+  constructor() {
+    super();
+    this.state = {
+      operation: ['+'],
+      aLen: 4,
+      bLen: 4,
+      input: "",
+      seed: 1
+    }
   }
-}
 
-export default function render(props) {
-  const { terms , seed} = props;
-  seedRandom(seed);
-  console.log(props);
-  if (terms) {
-    return h('div', { class: [classes.container] },
-      h('div', { class: [classes.leftBox] }, nextButton(),
-        createQuestion(props)),
-      numpad({ onInput }));
-  } else {
-    next(true);
-    return null;
+  componentDidMount() {
+    registerComponent('app', this);
+  }
+
+  componentWillUnmount() {
+    unregisterComponent('app');
+  }
+
+  next = () => {
+    const { seed } = this.state;
+    this.setState({ seed: seed + 1 });
+  }
+
+  prev = () => {
+    const { seed } = this.state;
+    this.setState({ seed: seed - 1 });
+  }
+
+  onInput = (key: string) => {
+    const { input } = this.state;
+    if (key === key_clear) {
+      this.setState({ input: '' });
+    } else if (key === key_bs) {
+      this.setState({ input: input.substring(0, input.length - 1) });
+    } else {
+      this.setState({ input: `${input}${key}`.substring(0, this.answerLength || 10) });
+    }
+  }
+
+  renderNextButton(correct: boolean) {
+    const cls = [classes.button];
+    if (correct) {
+      cls.push(classes.correct);
+    }
+    return (
+      <button onClick={this.next} class={cls.join(' ')}>
+        <b>{correct ? 'CORRECT!' : 'skip'}</b>
+      </button>
+    );
+  }
+
+
+  renderQuestion(p: { symbol: string, term1: number, term2: number, input: string }) {
+    return (
+      <div class={classes.questionBox}>
+        <label class={classes.label}> {p.term1.toLocaleString()} </label>
+        <label class={classes.label}>{p.symbol} {p.term2.toLocaleString()}</label>
+        <hr />
+        <label class={classes.label}>{p.input ? parseInt(p.input).toLocaleString() : ""} </label>
+      </div>
+    );
+  }
+
+  render() {
+    const { seed, operation, aLen, bLen, input } = this.state;
+    seedRandom(seed);
+    const op = pickOne(...operation);
+    const expr = operations[op](rand(aLen), rand(bLen));
+    this.answerLength = `${expr.answer}`.length;
+
+    return (
+      <div class={classes.container}>
+        <div>
+          <button onClick={this.prev}>&lt;</button>
+          <span> {seed} </span>
+          <button onClick={this.next}>&gt;</button>
+        </div>
+        <div class={classes.leftBox}>
+          {this.renderNextButton(expr.answer === parseInt(input))}
+          {this.renderQuestion({ symbol: expr.symbol, term1: expr.term1, term2: expr.term2, input)}
+        </div>
+        <Numpad onInput={this.onInput} />
+      </div>
+    );
   }
 }

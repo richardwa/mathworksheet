@@ -1,10 +1,10 @@
-import {h} from 'preact';
+import { h, FunctionalComponent } from 'preact';
 import jss from 'jss';
 
 export const key_bs = String.fromCharCode(8592);
 export const key_clear = 'C';
 
-const {classes} = jss.createStyleSheet({
+const { classes } = jss.createStyleSheet({
   button: {
     'font-size': '40pt',
     'text-align': 'center',
@@ -18,13 +18,18 @@ const {classes} = jss.createStyleSheet({
   },
 }).attach();
 
-const numpad = ({onInput}) => {
-  const cell = (content) =>
-      h('button', {class: [classes.button], onclick: () => onInput(content)},
-        content);
+type Props = {
+  onInput: (c: string) => void;
+}
 
+export const Numpad = ({ onInput }: Props) => {
 
-  window.onkeydown = function({key}) {
+  const Cell = ({ c }: { c: string }) =>
+    <button class={classes.button} onclick={() => onInput(c)}>
+      {c}
+    </button>;
+
+  window.onkeydown = function ({ key }) {
     // console.log(arguments);
     if (key === 'Escape') {
       onInput(key_clear);
@@ -35,15 +40,10 @@ const numpad = ({onInput}) => {
     }
   };
 
-  return h('div', {class: [classes.container]},
-           // 789
-           cell(7), cell(8), cell(9),
-           // 456
-           cell(4), cell(5), cell(6),
-           // 123
-           cell(1), cell(2), cell(3),
-           // 0bc
-           cell(0), cell(key_bs), cell(key_clear), );
+  return <div class={classes.container}>
+    <Cell c="7" /><Cell c="8" /><Cell c="9" />
+    <Cell c="4" /><Cell c="5" /><Cell c="6" />
+    <Cell c="1" /><Cell c="2" /><Cell c="3" />
+    <Cell c="0" /><Cell c={key_bs} /><Cell c={key_clear} />
+  </div>
 }
-
-export default numpad;

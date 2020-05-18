@@ -3,6 +3,7 @@ import { registerComponent, unregisterComponent } from './utils/urlstate';
 import { Navbar, Link } from './components/navbar';
 import { Welcome } from './pages/welcome';
 import { Worksheet } from './pages/worksheet';
+import { MathApp } from './pages/math-single';
 
 enum Pages {
   home = 'h',
@@ -46,7 +47,7 @@ export class Main extends Component<{}, { page: Pages }> {
       case Pages.worksheet:
         return <Worksheet />;
       case Pages.app:
-        return <div>app</div>;
+        return <MathApp />;
       default:
         return <div>page not found</div>
     }

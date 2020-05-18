@@ -15,6 +15,6 @@ export const rand = (size: number) => {
   return randRange(min, max);
 };
 
-export const pickOne = (...op: any[]) => {
+export const pickOne = <K>(...op: K[]): K => {
   return op[Math.floor(arng() * op.length)];
 };
