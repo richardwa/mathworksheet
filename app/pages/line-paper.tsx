@@ -1,7 +1,7 @@
 import { h, FunctionalComponent } from 'preact';
 import jss from 'jss';
 
-const size = '32pt';
+const size = '30pt';
 const { classes } = jss.createStyleSheet({
   container: {
     'font-size': size,
@@ -17,8 +17,9 @@ const { classes } = jss.createStyleSheet({
   },
   text: {
     'font-weight': 'normal',
-    'margin-top': '-1.15rem',
+    'margin-top': '-1.2rem',
     'position': 'absolute',
+    'font-family': 'Arial'
   },
   centerline: {
     'height': '50%',
