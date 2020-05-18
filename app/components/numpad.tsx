@@ -1,10 +1,10 @@
-import {h} from '../lib/preact.js';
-import {createSheet} from '../js/jss.js';
+import {h} from 'preact';
+import jss from 'jss';
 
 export const key_bs = String.fromCharCode(8592);
 export const key_clear = 'C';
 
-const {classes} = createSheet({
+const {classes} = jss.createStyleSheet({
   button: {
     'font-size': '40pt',
     'text-align': 'center',
@@ -16,7 +16,7 @@ const {classes} = createSheet({
     'grid-template-columns': 'repeat(3, 4ch)',
     'grid-template-rows': 'repeat(4, 4ch)',
   },
-});
+}).attach();
 
 const numpad = ({onInput}) => {
   const cell = (content) =>

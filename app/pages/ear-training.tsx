@@ -1,6 +1,6 @@
-import {synth} from '../js/synth.js';
-import {h} from '../lib/preact.js';
-import {randRange} from '../js/random.js';
+import {synth} from '../utils/synth';
+import {h} from 'preact';
+import {randRange} from '../utils/random';
 
 
 let counter = 0;

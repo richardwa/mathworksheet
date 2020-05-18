@@ -1,13 +1,13 @@
-import { h } from '../lib/preact.js';
-import { createSheet } from '../js/jss.js';
+import { h } from 'preact';
+import jss from 'jss';
 
-import { getState, setState } from '../js/urlstate.js';
-import { rand, pickOne, seedRandom } from '../js/random.js';
-import numpad, { key_bs, key_clear } from '../components/numpad.js';
-import { cn } from '../js/util.js';
+import { getState, setState } from '../utils/urlstate';
+import { rand, pickOne, seedRandom } from '../utils/random';
+import numpad, { key_bs, key_clear } from '../components/numpad';
+import { cn } from '../utils/util';
 
 const fontSize = '40pt';
-const { classes } = createSheet({
+const { classes } = jss.createStyleSheet({
   correct: {
     'color': 'green',
   },
@@ -35,7 +35,7 @@ const { classes } = createSheet({
   },
   leftBox:
     { 'display': 'inline-block', 'width': '10ch', 'margin': '0 1ch 1ch 1ch' },
-});
+}).attach();
 
 const operations = {
   '+': (a, b) => [a, '+', b, '=', a + b],

@@ -5,8 +5,9 @@
   "main": "index.html",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "parcel build app/index.html --out-dir dist",
-    "serve": "parcel app/index.html --out-dir target"
+    "build": "parcel build app/index.html --out-dir docs",
+    "preserve": "rimraf target",
+    "serve": "parcel app/index.html --out-dir target --port 8000"
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.4",

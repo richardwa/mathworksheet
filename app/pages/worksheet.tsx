@@ -1,11 +1,11 @@
 // @ts-check
 
-import { h } from '../lib/preact.js';
-import { rand, pickOne, seedRandom } from '../js/random.js';
-import { createSheet } from '../js/jss.js';
-import { setState, updateState } from '../js/urlstate.js';
+import { h } from 'preact';
+import { rand, pickOne, seedRandom } from '../utils/random';
+import jss from 'jss';
+import { setState, updateState } from '../utils/urlstate';
 
-const { classes } = createSheet({
+const { classes } = jss.createStyleSheet({
   container: {
     'font-size': '20pt',
     'display': 'grid',
@@ -22,7 +22,7 @@ const { classes } = createSheet({
     'font-size': '12pt',
     'color': 'gray',
   }
-});
+}).attach();
 
 const div = (attr, ...args) => h('div', attr, ...args);
 const span = (attr, ...args) =>
