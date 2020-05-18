@@ -30,7 +30,6 @@ const urlState = (() => {
     } catch (e) {
       return {};
     }
-
   };
 
   const setStateIntoURL = (s: StateMap, withHistory: boolean = true) => {

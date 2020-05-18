@@ -12,7 +12,8 @@
     "jsxFactory": "h",
     "noEmit": true,
     "lib": [
-      "ES2017"
+      "ES2017",
+      "DOM"
     ]
   },
   "files": [

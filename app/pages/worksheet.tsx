@@ -117,7 +117,6 @@ export class Worksheet extends Component<{}, State> {
 // conveniet get answers function
 // @ts-ignore
 window.getAnswers = () => {
-  // @ts-ignore
   document.querySelectorAll(".question").forEach((v, i) => {
     // @ts-ignore
     console.log(i + 1, v.attributes.title.value);
