@@ -4,7 +4,7 @@
   "description": "Math worksheet generator https://richardwa.github.io/mathworksheet/",
   "main": "index.html",
   "scripts": {
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf docs",
     "build": "parcel build app/index.html --out-dir docs",
     "preserve": "rimraf target",
     "serve": "parcel app/index.html --out-dir target --port 8000",
