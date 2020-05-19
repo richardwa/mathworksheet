@@ -22,9 +22,9 @@ type Props = {
   onInput: (c: string) => void;
 }
 
-export const Numpad = ({ onInput }: Props) => {
+export const Numpad: FunctionalComponent<Props> = ({ onInput }) => {
 
-  const Cell = ({ c }: { c: string }) =>
+  const Cell: FunctionalComponent<{ c: string }> = ({ c }) =>
     <button class={classes.button} onClick={() => onInput(c)}>
       {c}
     </button>;

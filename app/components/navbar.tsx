@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, FunctionalComponent } from 'preact';
 import jss from 'jss';
 
 const fontSize = '14pt';
@@ -28,10 +28,9 @@ const { classes: print } = jss.createStyleSheet({
 type LinkProps = {
   onclick: () => void;
   current: boolean;
-  children
 }
 
-export const Link = ({ onclick, current, children }: LinkProps) => {
+export const Link: FunctionalComponent<LinkProps> = ({ onclick, current, children }) => {
   const classes = [css.button];
   if (current) {
     classes.push(css.current);
@@ -39,7 +38,7 @@ export const Link = ({ onclick, current, children }: LinkProps) => {
   return <button class={classes.join(' ')} onClick={onclick}>{children}</button>
 };
 
-export const Navbar = ({ children }) =>
+export const Navbar: FunctionalComponent<{}> = ({ children }) =>
   <div class={[css.navbar, print.noPrint].join(' ')}>
     {children}
   </div>

@@ -1,11 +1,7 @@
 import { h, render, Component } from 'preact';
 import { registerComponent, unregisterComponent } from './utils/urlstate';
 import { Navbar, Link } from './components/navbar';
-import { Welcome } from './pages/welcome';
-import { Worksheet } from './pages/worksheet';
-import { MathApp } from './pages/math-single';
-import { LinePaper } from './pages/line-paper';
-import { EarTraining } from './pages/ear-training';
+import { Welcome, Worksheet, MathApp, EarTraining, LinePaper, } from './pages'
 
 const pages = {
   Home: Welcome,
