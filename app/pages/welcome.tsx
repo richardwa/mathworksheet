@@ -16,17 +16,35 @@ export class Welcome extends Component<{}, {}>{
     return (
       <div class={classes.container}>
         <h1>Math World</h1>
-        <h2>Print outs</h2>
+
         <ul>
+          <h2>Print outs</h2>
           <li>Add/Subtract worksheet</li>
           <li>line paper - letters</li>
           <li>line paper - numbers</li>
         </ul>
-        <h2>Online App</h2>
+
         <ul>
-          <li>Add/Subtract practice</li>
-          <li><a class={classes.a} href='javascript:;'>times practice</a></li>
+          <h2>Online App</h2>
+          <li>practice a single problem at a time</li>
+        </ul>
+
+        <ul>
+          <h2>Shortcuts</h2>
+          <li>
+            <a class={classes.a}
+              href='#{"main":{"page":"Worksheet"},"ws":{"operations":["+","-"],"termLengths":[2,2,2,1],"seed":1}}'>
+              Add/Subtract worksheet
+            </a>
+          </li>
+          <li>
+            <a class={classes.a}
+              href='#{"main":{"page":"Worksheet"},"ws":{"operations":["*"],"termLengths":[2,1],"seed":1}}'>
+              times worksheet
+            </a>
+          </li>
         </ul>
       </div>);
   }
-} 
+}
+

@@ -11,7 +11,7 @@ export const randRange = (min: number, max: number) => {
 };
 
 export const rand = (size: number) => {
-  const min = Math.pow(10, size - 1);
+  const min = Math.pow(10, size - 1) + 1;
   const max = Math.pow(10, size);
   return randRange(min, max);
 };

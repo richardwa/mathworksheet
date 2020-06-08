@@ -31,6 +31,7 @@ const urlState = (() => {
         return {};
       }
     } catch (e) {
+      console.log(e);
       return {};
     }
   };
