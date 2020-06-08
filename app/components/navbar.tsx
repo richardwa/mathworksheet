@@ -38,7 +38,12 @@ export const Link: FunctionalComponent<LinkProps> = ({ onclick, current, childre
   return <button class={classes.join(' ')} onClick={onclick}>{children}</button>
 };
 
+const getURL = () => {
+  alert(decodeURI(location.href));
+}
+
 export const Navbar: FunctionalComponent<{}> = ({ children }) =>
   <div class={[css.navbar, print.noPrint].join(' ')}>
     {children}
+    <button class={css.button} style="float:right" onClick={getURL}>Get URL</button>
   </div>
