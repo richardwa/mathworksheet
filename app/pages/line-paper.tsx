@@ -35,11 +35,11 @@ const line = (ch: string) =>
   </label>;
 
 const blankArray = Object.freeze(Array.from({ length: 26 }));
-const modes = {
+export const modes = {
   blank: blankArray.map((x, i) => ''),
-  alpha: blankArray.map((x, i) => String.fromCharCode(i + ('a'.charCodeAt(0)))),
-  caps: blankArray.map((x, i) => String.fromCharCode(i + ('A'.charCodeAt(0)))),
-  num: blankArray.map((x, i) => `${i % 10}`)
+  letters: blankArray.map((x, i) => String.fromCharCode(i + ('a'.charCodeAt(0)))),
+  capitals: blankArray.map((x, i) => String.fromCharCode(i + ('A'.charCodeAt(0)))),
+  numbers: blankArray.map((x, i) => `${i % 10}`)
 }
 type State = {
   mode: keyof typeof modes;
@@ -49,7 +49,7 @@ export class LinePaper extends Component<{}, State>{
   constructor() {
     super();
     this.state = {
-      mode: "alpha"
+      mode: "blank"
     }
   }
   componentDidMount() {

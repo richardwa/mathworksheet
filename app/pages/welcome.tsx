@@ -1,4 +1,5 @@
 import { h, Component } from 'preact';
+import { modes } from './line-paper';
 import jss from 'jss';
 
 const { classes } = jss.createStyleSheet({
@@ -19,31 +20,48 @@ export class Welcome extends Component<{}, {}>{
 
         <h2>Print outs</h2>
         <ul>
-          <li>Add/Subtract worksheet</li>
-          <li>line paper - letters</li>
-          <li>line paper - numbers</li>
-        </ul>
-
-        <h2>Online App</h2>
-        <ul>
-          <li>practice a single problem at a time</li>
-        </ul>
-
-        <h2>Shortcuts</h2>
-        <ul>
           <li>
             <a class={classes.a}
               href='#{"main":{"page":"Worksheet"},"ws":{"operations":["+","-"],"termLengths":[2,2,2,1],"seed":1}}'>
-              Add/Subtract worksheet
+              add/subtract
             </a>
           </li>
           <li>
             <a class={classes.a}
               href='#{"main":{"page":"Worksheet"},"ws":{"operations":["*"],"termLengths":[2,1],"seed":1}}'>
-              times worksheet
+              times
+            </a>
+          </li>
+          {Object.keys(modes).map(mode => (<li>
+            <a class={classes.a}
+              href={`#{"main":{"page":"Line Paper"},"line":{"mode":"${mode}"}}`}>
+              line paper - {mode}
+            </a>
+          </li>))}
+        </ul>
+
+        <h2>Online App</h2>
+        <ul>
+          <li>
+            <a class={classes.a}
+              href='#{"main":{"page":"App"},"app":{"operation":["+"],"len1":4,"len2":4,"input":"","seed":1}}'>
+              addition
+            </a>
+          </li>
+          <li>
+            <a class={classes.a}
+              href='#{"main":{"page":"App"},"app":{"operation":["+","-"],"len1":4,"len2":4,"input":"","seed":1}}'>
+              add/subtract
+            </a>
+          </li>
+          <li>
+            <a class={classes.a}
+              href='#{"main":{"page":"App"},"app":{"operation":["*"],"len1":2,"len2":1,"input":"","seed":1}}'>
+              times
             </a>
           </li>
         </ul>
+
       </div>);
   }
 }
