@@ -1,4 +1,5 @@
-import { h, FunctionalComponent } from 'preact';
+import * as React from 'react';
+import { FC } from 'react';
 import jss from 'jss';
 
 export const key_bs = String.fromCharCode(8592);
@@ -22,10 +23,10 @@ type Props = {
   onInput: (c: string) => void;
 }
 
-export const Numpad: FunctionalComponent<Props> = ({ onInput }) => {
+export const Numpad: FC<Props> = ({ onInput }) => {
 
-  const Cell: FunctionalComponent<{ c: string }> = ({ c }) =>
-    <button class={classes.button} onClick={() => onInput(c)}>
+  const Cell: FC<{ c: string }> = ({ c }) =>
+    <button className={classes.button} onClick={() => onInput(c)}>
       {c}
     </button>;
 
@@ -40,7 +41,7 @@ export const Numpad: FunctionalComponent<Props> = ({ onInput }) => {
     }
   };
 
-  return <div class={classes.container}>
+  return <div className={classes.container}>
     <Cell c="7" /><Cell c="8" /><Cell c="9" />
     <Cell c="4" /><Cell c="5" /><Cell c="6" />
     <Cell c="1" /><Cell c="2" /><Cell c="3" />

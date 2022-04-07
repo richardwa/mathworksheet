@@ -1,4 +1,7 @@
-import { h, render, Component } from 'preact';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { Component } from 'react';
+
 import { registerComponent, unregisterComponent } from './utils/urlstate';
 import { Navbar, Link } from './components/navbar';
 import { Welcome, Worksheet, MathApp, EarTraining, LinePaper, } from './pages'
@@ -15,8 +18,8 @@ const pageList = Object.keys(pages) as Pages[];
 
 export class Main extends Component<{}, { page: Pages }> {
   setPageFns = new Map<Pages, () => void>();
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       page: 'Home'
     }
@@ -35,9 +38,9 @@ export class Main extends Component<{}, { page: Pages }> {
 
   renderPage() {
     const { page } = this.state;
-    const Component = pages[page];
-    if (Component) {
-      return <Component />;
+    const PageComponent = pages[page];
+    if (PageComponent) {
+      return <PageComponent />;
     } else {
       return <div>page not found</div>;
     }
@@ -58,4 +61,4 @@ export class Main extends Component<{}, { page: Pages }> {
 }
 
 
-render(<Main />, document.body);
+ReactDOM.render(<Main />, document.body);

@@ -1,4 +1,5 @@
-import { h, FunctionalComponent } from 'preact';
+import * as React from 'react';
+import { FC } from 'react';
 import jss from 'jss';
 
 const fontSize = '14pt';
@@ -17,6 +18,12 @@ const { classes: css } = jss.createStyleSheet({
     'cursor': 'pointer',
     'font-size': fontSize,
     'margin': '2px',
+  },
+  buttonRight: {
+    'cursor': 'pointer',
+    'font-size': fontSize,
+    'margin': '2px',
+    'float': 'right'
   }
 }).attach();
 
@@ -30,20 +37,20 @@ type LinkProps = {
   current: boolean;
 }
 
-export const Link: FunctionalComponent<LinkProps> = ({ onclick, current, children }) => {
+export const Link: FC<LinkProps> = ({ onclick, current, children }) => {
   const classes = [css.button];
   if (current) {
     classes.push(css.current);
   }
-  return <button class={classes.join(' ')} onClick={onclick}>{children}</button>
+  return <button className={classes.join(' ')} onClick={onclick}>{children}</button>
 };
 
 const getURL = () => {
   alert(decodeURI(location.href));
 }
 
-export const Navbar: FunctionalComponent<{}> = ({ children }) =>
-  <div class={[css.navbar, print.noPrint].join(' ')}>
+export const Navbar: FC<{}> = ({ children }) =>
+  <div className={[css.navbar, print.noPrint].join(' ')}>
     {children}
-    <button class={css.button} style="float:right" onClick={getURL}>Get URL</button>
+    <button className={css.buttonRight} onClick={getURL}>Get URL</button>
   </div>

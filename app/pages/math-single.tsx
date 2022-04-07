@@ -1,4 +1,7 @@
-import { h, Component } from 'preact';
+
+import * as React from 'react';
+import { Component } from 'react';
+
 import jss from 'jss';
 
 import { registerComponent, unregisterComponent, nextHistoryWillReplace } from '../utils/urlstate';
@@ -59,8 +62,8 @@ type State = {
 
 export class MathApp extends Component<{}, State>{
   answerLength?: number;
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       operation: ['+'],
       len1: 4,
@@ -107,7 +110,7 @@ export class MathApp extends Component<{}, State>{
       cls.push(classes.correct);
     }
     return (
-      <button onClick={this.next} class={cls.join(' ')}>
+      <button onClick={this.next} className={cls.join(' ')}>
         <b>{correct ? 'CORRECT!' : 'skip'}</b>
       </button>
     );
@@ -116,11 +119,11 @@ export class MathApp extends Component<{}, State>{
 
   renderQuestion(p: { symbol: string, term1: number, term2: number, input: string }) {
     return (
-      <div class={classes.questionBox}>
-        <label class={classes.label}> {p.term1.toLocaleString()} </label>
-        <label class={classes.label}>{p.symbol} {p.term2.toLocaleString()}</label>
+      <div className={classes.questionBox}>
+        <label className={classes.label}> {p.term1.toLocaleString()} </label>
+        <label className={classes.label}>{p.symbol} {p.term2.toLocaleString()}</label>
         <hr />
-        <label class={classes.label}>{p.input ? parseInt(p.input).toLocaleString() : ""} </label>
+        <label className={classes.label}>{p.input ? parseInt(p.input).toLocaleString() : ""} </label>
       </div>
     );
   }
@@ -133,13 +136,13 @@ export class MathApp extends Component<{}, State>{
     this.answerLength = `${expr.answer}`.length;
 
     return (
-      <div class={classes.container}>
+      <div className={classes.container}>
         <div>
           <button onClick={this.prev}>&lt;</button>
           <span> {seed} </span>
           <button onClick={this.next}>&gt;</button>
         </div>
-        <div class={classes.leftBox}>
+        <div className={classes.leftBox}>
           {this.renderNextButton(expr.answer === parseInt(input))}
           {this.renderQuestion({ symbol: expr.symbol, term1: expr.term1, term2: expr.term2, input })}
         </div>

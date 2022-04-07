@@ -9,7 +9,6 @@
     "sourceMap": true,
     "outDir": "./dist",
     "jsx": "react",
-    "jsxFactory": "h",
     "noEmit": true,
     "lib": [
       "ES2017",

@@ -1,4 +1,4 @@
-import { Component } from "preact";
+import { Component } from 'react';
 
 let historySkip: number = 0;
 export const nextHistoryWillReplace = () => historySkip++;

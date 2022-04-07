@@ -1,4 +1,7 @@
-import { h, FunctionalComponent, Component } from 'preact';
+
+import * as React from 'react';
+import { Component } from 'react';
+
 import jss from 'jss';
 import { registerComponent, unregisterComponent } from '../utils/urlstate';
 
@@ -29,9 +32,9 @@ const { classes } = jss.createStyleSheet({
 }).attach();
 
 const line = (ch: string) =>
-  <label class={classes.label} >
-    <div class={classes.centerline} />
-    <b class={classes.text}>{ch}</b>
+  <label className={classes.label} >
+    <div className={classes.centerline} />
+    <b className={classes.text}>{ch}</b>
   </label>;
 
 const blankArray = Object.freeze(Array.from({ length: 26 }));
@@ -46,8 +49,8 @@ type State = {
 }
 
 export class LinePaper extends Component<{}, State>{
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       mode: "blank"
     }
@@ -61,6 +64,6 @@ export class LinePaper extends Component<{}, State>{
   }
   render() {
     const { mode } = this.state;
-    return < div class={classes.container} >{...modes[mode].map(line)}</div>
+    return < div className={classes.container} >{...modes[mode].map(line)}</div>
   }
 }

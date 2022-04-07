@@ -1,5 +1,7 @@
 
-import { h, Component } from 'preact';
+import * as React from 'react';
+import { Component } from 'react';
+
 import { rand, pickOne, seedRandom } from '../utils/random';
 import { registerComponent, unregisterComponent } from '../utils/urlstate';
 import jss from 'jss';
@@ -27,7 +29,7 @@ const { classes } = jss.createStyleSheet({
 }).attach();
 
 
-const Field = ({ num }) => <label class={classes.field}>{num.toLocaleString()}</label>;
+const Field = ({ num }) => <label className={classes.field}>{num.toLocaleString()}</label>;
 
 type QuestionProps = {
   num: number,
@@ -50,8 +52,8 @@ const Question = ({ num, operations, termLengths }: QuestionProps) => {
   const ans = eval(plainExpr.join(''));
 
   return (
-    <span title={ans} class={[classes.block, 'question'].join(' ')}>
-      <i class={classes.questionNumber}>{(num + 1).toString().padStart(2, '0')})</i>
+    <span title={ans} className={[classes.block, 'question'].join(' ')}>
+      <i className={classes.questionNumber}>{(num + 1).toString().padStart(2, '0')})</i>
       {...expr}
       <b>=</b>
     </span>
@@ -68,8 +70,8 @@ type State = {
 
 
 export class Worksheet extends Component<{}, State> {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       operations: ['+', '-'],
       termLengths: [2, 2, 2, 1],
@@ -101,12 +103,12 @@ export class Worksheet extends Component<{}, State> {
       (x, i) => <Question num={i} operations={operations} termLengths={termLengths} />);
 
     return [
-      <div class={classes.center}>
+      <div className={classes.center}>
         <button onClick={this.prev}>&lt;</button>
         <span> {seed} </span>
         <button onClick={this.next}>&gt;</button>
       </div>,
-      <div class={classes.container}>
+      <div className={classes.container}>
         {questions}
       </div>
     ];

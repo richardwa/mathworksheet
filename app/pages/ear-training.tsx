@@ -1,5 +1,7 @@
 
-import { h, Component } from 'preact';
+import * as React from 'react';
+import { Component } from 'react';
+
 import { synth } from '../utils/synth';
 import { randRange, seedRandom } from '../utils/random';
 import { registerComponent, unregisterComponent } from '../utils/urlstate';
@@ -27,8 +29,8 @@ type State = {
   seed: number
 }
 export class EarTraining extends Component<{}, State>{
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       seed: 1
     }
