@@ -18,4 +18,4 @@ This is much better than traditional approach.
   * problem is done left to right, with most significant digits are done first
   * encourages mental math
   * my little one started reading numbers backwards when i taught the traditional approach, so it led me to believe there is something fundamentally wrong with traditional approach.
-  
+ 
