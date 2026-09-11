@@ -1,4 +1,4 @@
-import Alea from 'alea';
+import Alea from "alea";
 
 let arng = Alea(Math.random());
 

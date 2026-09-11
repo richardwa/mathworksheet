@@ -1,0 +1,13 @@
+* {
+  font-family: consolas, monospace;
+}
+
+body {
+  margin: 0;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

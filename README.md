@@ -2,7 +2,7 @@
 Math worksheet generator
 https://richardwa.github.io/mathworksheet/
 
-A simple math worksheet generator.  Written without any frameworks or build tools for easy editing, customizing and serving.
+A simple math worksheet generator.  
 
 I wanted horizontal math problems to encourage mental math.  It turns out this is actually easier to teach than the traditional borrow/carry methods.
 
