@@ -8,10 +8,19 @@ const opApply: Record<string, (a: number, b: number) => number> = {
   "+": (a, b) => a + b,
   "-": (a, b) => a - b,
   "*": (a, b) => a * b,
+  "/": (a, b) => Math.floor(a / Math.max(1, b)),
+};
+
+// for division, rewrite the terms so the first term is a multiple of the
+// divisor (keeps answers whole), mirroring the /app page's approach
+const fixTerms = (op: string, terms: number[]): number[] => {
+  if (op !== "/") return terms;
+  const [a, b] = terms;
+  return [a * b, b];
 };
 
 type State = {
-  operations: Array<"+" | "-" | "*">;
+  operations: Array<"+" | "-" | "*" | "/">;
   termLengths: number[];
   seed: number;
 };
@@ -56,7 +65,10 @@ export const Worksheet = (stateJson?: string) => {
     seedRandom(seed.get());
     const questions = Array.from({ length: questionCount }, (_, num) => {
       const op = pickOne(...operations.get());
-      const terms = termLengths.get().map((size) => rand(size));
+      const terms = fixTerms(
+        op,
+        termLengths.get().map((size) => rand(size)),
+      );
       const ans = terms
         .slice(1)
         .reduce((acc, t, i) => opApply[op](acc, t), terms[0]);
